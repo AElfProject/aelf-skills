@@ -1,0 +1,177 @@
+[中文](README.zh-CN.md) | English
+
+# aelf Skills
+
+A single discovery and bootstrap entry for the aelf skill ecosystem.
+
+[![npm](https://img.shields.io/npm/v/@blockchain-forever/aelf-skills)](https://www.npmjs.com/package/@blockchain-forever/aelf-skills)
+
+This repository provides:
+1. Bilingual entry docs for humans and AI agents.
+2. A machine-readable catalog: `skills-catalog.json`.
+3. One-click bootstrap: `bootstrap.sh`.
+
+## AI Quick Prompt (OpenClaw / Codex / Cursor / Claude Code)
+
+```text
+Repository: https://github.com/AElfProject/aelf-skills
+This is a client-agnostic prompt for OpenClaw, Codex, Cursor, and Claude Code.
+Read first: skills-catalog.json, docs/SKILL_ROUTING_MATRIX.md, docs/AI_E2E_SCENARIOS.md.
+Then run:
+1) ./bootstrap.sh --source github --dest ./downloaded-skills
+2) bun run health:check -- --skills-root ./downloaded-skills
+3) for d in ./downloaded-skills/*; do [ -f "$d/package.json" ] || continue; (cd "$d" && bun run setup openclaw) || echo "[WARN] $(basename "$d") setup openclaw failed"; done
+Routing rule: follow SKILL_ROUTING_MATRIX; if ambiguous, output Recommended/Alternative/Reason.
+Failure rule: use Common Recovery Template in docs/AI_E2E_SCENARIOS.md.
+```
+
+## Scope
+
+This hub focuses on **discovery, download, install, and capability indexing**.
+
+It does **not** replace each skill repository's own client integration logic.
+Client-specific setup (`OpenClaw`, `Cursor`, `Claude Desktop`, `Codex`, `Claude Code`) remains inside each skill repo.
+AI agents: jump to [AI Navigation](#ai-navigation) for routing and execution guides.
+
+## Prerequisites
+
+- `bun >= 1.1.0` (hard requirement)
+- `npm >= 10`
+- `git >= 2.39`
+- `tar` (GNU tar / bsdtar)
+
+## Local Environment Setup
+
+`workspace.json` paths use `${SKILLS_BASE}` placeholders for portability.
+`workspace.json` is Codex-local workspace config; external consumers should use `skills-catalog.json` as the data source.
+
+```bash
+export SKILLS_BASE=/path/to/your/workspace
+```
+
+Example:
+- `${SKILLS_BASE}/AElf/aelf-node-skill`
+- `${SKILLS_BASE}/awaken/awaken-agent-skills`
+
+## Install
+
+```bash
+npm install @blockchain-forever/aelf-skills
+# or
+bun add @blockchain-forever/aelf-skills
+```
+
+## Quick Start
+
+```bash
+# 1) Generate public catalog and sync README tables
+bun run catalog:generate
+
+# 2) Generate local catalog with sourcePath (for local bootstrap/health)
+bun run catalog:generate:local
+
+# 3) Run baseline gates
+bun run health:check
+bun run readme:check
+bun run security:audit
+
+# 4) Bootstrap selected skills
+./bootstrap.sh --only aelf-node-skill --skip-install
+```
+
+## Bootstrap CLI
+
+```bash
+./bootstrap.sh [--catalog <path>] [--dest <dir>] [--source auto|npm|github|local] [--skip-install] [--skip-health] [--only <csv>]
+```
+
+Defaults:
+1. `--source auto` (npm first, fallback to github)
+2. install enabled
+3. health check enabled
+4. `skills-catalog.json` as catalog source
+
+## Generated Catalog
+
+`skills-catalog.json` is the stable machine interface.
+
+Main fields per skill:
+1. `id`, `displayName`
+2. `npm` (`name`, `version`)
+3. `repository.https`
+4. `description`, `capabilities`
+5. `artifacts` (`skillMd`, `mcpServer`, `openclaw`)
+6. `setupCommands`
+7. `clientSupport`
+8. `dependsOn` (optional, schema `1.2.0`)
+
+Schema references:
+1. `docs/schemas/workspace.schema.json`
+2. `docs/schemas/skill-frontmatter.schema.json`
+3. `docs/schemas/openclaw.schema.json`
+4. `docs/schemas/skills-catalog.schema.json`
+
+Schema evolution policy:
+1. `patch` (`1.2.x`): wording/docs fixes, no field semantics change.
+2. `minor` (`1.x.0`): backward-compatible field additions.
+3. `major` (`x.0.0`): breaking changes only.
+
+## AI Navigation
+
+1. Catalog field semantics: [docs/CATALOG_SCHEMA.md](docs/CATALOG_SCHEMA.md) | [docs/CATALOG_SCHEMA.zh-CN.md](docs/CATALOG_SCHEMA.zh-CN.md)
+2. Intent routing matrix: [docs/SKILL_ROUTING_MATRIX.md](docs/SKILL_ROUTING_MATRIX.md) | [docs/SKILL_ROUTING_MATRIX.zh-CN.md](docs/SKILL_ROUTING_MATRIX.zh-CN.md)
+3. End-to-end execution scenarios (with recovery): [docs/AI_E2E_SCENARIOS.md](docs/AI_E2E_SCENARIOS.md) | [docs/AI_E2E_SCENARIOS.zh-CN.md](docs/AI_E2E_SCENARIOS.zh-CN.md)
+
+## Current Skill Snapshot
+
+This section is auto-synced by `bun run catalog:generate`.
+
+<!-- SKILL_TABLE_START -->
+| ID | npm Package | Version | OpenClaw Tools | Description |
+|---|---|---:|---:|---|
+| aelf-node-skill | @blockchain-forever/aelf-node-skill | 0.1.0 | 11 | AElf node querying and contract execution skill for agents. |
+| aelfscan-skill | @aelfscan/agent-skills | 0.2.0 | 61 | AelfScan explorer data retrieval and analytics skill for agents. |
+| awaken-agent-skills | @awaken-finance/agent-kit | 1.2.1 | 11 | Awaken DEX trading and market data operations for agents. |
+| eforest-agent-skills | @eforest-finance/agent-skills | 0.4.0 | 48 | eForest symbol and forest NFT operations for agent workflows. |
+| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.2 | 28 | Portkey CA wallet registration/auth/guardian/transfer operations for agents. |
+| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.1 | 21 | Portkey EOA wallet and asset operations for aelf agents. |
+| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.0 | 41 | TomorrowDAO governance, BP, and resource operations for agents. |
+<!-- SKILL_TABLE_END -->
+
+## Health Check
+
+If a check fails, use the [Common Recovery Template](docs/AI_E2E_SCENARIOS.md#common-recovery-template).
+
+```bash
+# Check local source repositories from workspace.json
+bun run health:check
+
+# Check downloaded skills under specific root
+bun run health:check -- --skills-root ./downloaded-skills
+```
+
+## Security Boundary
+
+1. `bootstrap` does not execute setup commands.
+2. `bootstrap` only downloads, optionally installs dependencies, and runs health checks.
+3. Use `bun run security:audit` to detect risky setup command patterns.
+
+## CI Gates
+
+CI workflow: `.github/workflows/gates.yml`
+
+Fixture-based gate set:
+1. `catalog:generate` with `testdata/workspace.ci.json`
+2. `health:check` against fixture catalog
+3. `readme:check`
+4. `security:audit`
+5. `bootstrap --only fixture-node-skill --source local --skip-install`
+
+## Contributing
+
+1. Contribution guide: [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md) | [CONTRIBUTING.md](CONTRIBUTING.md)
+2. AI execution contract: [docs/AI_SKILL_CONTRACT.zh-CN.md](docs/AI_SKILL_CONTRACT.zh-CN.md) | [docs/AI_SKILL_CONTRACT.md](docs/AI_SKILL_CONTRACT.md)
+3. AI prompt template: [docs/templates/AI_NEW_SKILL_PROMPT.zh-CN.md](docs/templates/AI_NEW_SKILL_PROMPT.zh-CN.md) | [docs/templates/AI_NEW_SKILL_PROMPT.md](docs/templates/AI_NEW_SKILL_PROMPT.md)
+4. PR checklist: [docs/templates/NEW_SKILL_CHECKLIST.zh-CN.md](docs/templates/NEW_SKILL_CHECKLIST.zh-CN.md) | [docs/templates/NEW_SKILL_CHECKLIST.md](docs/templates/NEW_SKILL_CHECKLIST.md)
+5. Skill markdown template: [docs/templates/SKILL_TEMPLATE.zh-CN.md](docs/templates/SKILL_TEMPLATE.zh-CN.md) | [docs/templates/SKILL_TEMPLATE.md](docs/templates/SKILL_TEMPLATE.md)
+6. Golden path example: [docs/examples/EXAMPLE_NEW_SKILL_DIFF.zh-CN.md](docs/examples/EXAMPLE_NEW_SKILL_DIFF.zh-CN.md) | [docs/examples/EXAMPLE_NEW_SKILL_DIFF.md](docs/examples/EXAMPLE_NEW_SKILL_DIFF.md)

@@ -1,0 +1,9 @@
+{
+  "name": "@fixture/core-skill",
+  "version": "0.1.0",
+  "description": "Fixture core skill for CI gates.",
+  "scripts": {
+    "setup": "bun run setup",
+    "mcp": "bun run mcp"
+  }
+}

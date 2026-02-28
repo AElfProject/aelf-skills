@@ -1,0 +1,283 @@
+{
+  "schemaVersion": "1.2.0",
+  "generatedAt": "2026-02-27T15:24:17.210Z",
+  "source": "workspace.json",
+  "skills": [
+    {
+      "id": "aelf-node-skill",
+      "displayName": "AElf Node Skill",
+      "npm": {
+        "name": "@blockchain-forever/aelf-node-skill",
+        "version": "0.1.0"
+      },
+      "repository": {
+        "https": "https://github.com/AElfProject/aelf-node-skill.git"
+      },
+      "description": "AElf node querying and contract execution skill for agents.",
+      "description_zh": "AElf 节点查询与合约调用技能。",
+      "capabilities": [
+        "Chain reads: status, block, transaction result, metadata",
+        "Contract operations: view call and transaction sending",
+        "Node registry import/list with REST-first and SDK fallback strategy",
+        "Supports SDK, CLI, MCP, and OpenClaw integration from one codebase."
+      ],
+      "artifacts": {
+        "skillMd": true,
+        "mcpServer": true,
+        "openclaw": true
+      },
+      "setupCommands": {
+        "install": "bun install",
+        "list": "bun run setup list",
+        "openclaw": "bun run setup openclaw",
+        "cursor": "bun run setup cursor",
+        "claudeDesktop": "bun run setup claude"
+      },
+      "clientSupport": {
+        "openclaw": "native",
+        "cursor": "native-setup",
+        "claude_desktop": "native-setup",
+        "claude_code": "manual-mcp",
+        "codex": "manual-cli-or-mcp"
+      },
+      "openclawToolCount": 11
+    },
+    {
+      "id": "aelfscan-skill",
+      "displayName": "AelfScan Skill",
+      "npm": {
+        "name": "@aelfscan/agent-skills",
+        "version": "0.2.0"
+      },
+      "repository": {
+        "https": "https://github.com/AelfScanProject/aelfscan-skill.git"
+      },
+      "description": "AelfScan explorer data retrieval and analytics skill for agents.",
+      "description_zh": "AelfScan 浏览器数据检索与分析技能。",
+      "capabilities": [
+        "Domain coverage: search, blockchain, address, token, NFT, statistics",
+        "Single tool descriptor source for SDK/CLI/MCP/OpenClaw",
+        "MCP output governance controls and standardized trace-aware errors",
+        "Supports SDK, CLI, MCP, and OpenClaw integration from one codebase."
+      ],
+      "artifacts": {
+        "skillMd": true,
+        "mcpServer": true,
+        "openclaw": true
+      },
+      "setupCommands": {
+        "install": "bun install",
+        "list": "bun run setup list",
+        "openclaw": "bun run setup openclaw",
+        "cursor": "bun run setup cursor",
+        "claudeDesktop": "bun run setup claude"
+      },
+      "clientSupport": {
+        "openclaw": "native",
+        "cursor": "native-setup",
+        "claude_desktop": "native-setup",
+        "claude_code": "manual-mcp",
+        "codex": "manual-cli-or-mcp"
+      },
+      "openclawToolCount": 61
+    },
+    {
+      "id": "awaken-agent-skills",
+      "displayName": "Awaken Agent Skill",
+      "npm": {
+        "name": "@awaken-finance/agent-kit",
+        "version": "1.2.1"
+      },
+      "repository": {
+        "https": "https://github.com/Awaken-Finance/awaken-agent-skills.git"
+      },
+      "description": "Awaken DEX trading and market data operations for agents.",
+      "description_zh": "Awaken DEX 交易与行情数据技能。",
+      "capabilities": [
+        "Read operations: quote, pair info, balances, allowance, positions",
+        "Write operations: swap, add/remove liquidity, approve",
+        "SignalR-based K-line retrieval and interval discovery",
+        "Supports SDK, CLI, MCP, and OpenClaw integration from one codebase."
+      ],
+      "artifacts": {
+        "skillMd": true,
+        "mcpServer": true,
+        "openclaw": true
+      },
+      "setupCommands": {
+        "install": "bun install",
+        "list": "bun run setup list",
+        "openclaw": "bun run setup openclaw",
+        "cursor": "bun run setup cursor",
+        "claudeDesktop": "bun run setup claude"
+      },
+      "clientSupport": {
+        "openclaw": "native",
+        "cursor": "native-setup",
+        "claude_desktop": "native-setup",
+        "claude_code": "manual-mcp",
+        "codex": "manual-cli-or-mcp"
+      },
+      "openclawToolCount": 11
+    },
+    {
+      "id": "eforest-agent-skills",
+      "displayName": "eForest Agent Skill",
+      "npm": {
+        "name": "@eforest-finance/agent-skills",
+        "version": "0.4.0"
+      },
+      "repository": {
+        "https": "https://github.com/eforest-finance/eforest-agent-skills.git"
+      },
+      "description": "eForest symbol and forest NFT operations for agent workflows.",
+      "description_zh": "eForest 代币与 NFT 市场操作技能。",
+      "capabilities": [
+        "Symbol-market operations: buy seed, create token, issue token",
+        "Forest operations: collection/item creation, listing, offer, trade",
+        "Config-first service gating and graceful degradation",
+        "Supports SDK, CLI, MCP, and OpenClaw integration from one codebase."
+      ],
+      "artifacts": {
+        "skillMd": true,
+        "mcpServer": true,
+        "openclaw": true
+      },
+      "setupCommands": {
+        "install": "bun install",
+        "list": "bun run setup list",
+        "openclaw": "bun run setup openclaw",
+        "cursor": "bun run setup cursor",
+        "claudeDesktop": "bun run setup claude"
+      },
+      "clientSupport": {
+        "openclaw": "native",
+        "cursor": "native-setup",
+        "claude_desktop": "native-setup",
+        "claude_code": "manual-mcp",
+        "codex": "manual-cli-or-mcp"
+      },
+      "openclawToolCount": 48
+    },
+    {
+      "id": "portkey-ca-agent-skills",
+      "displayName": "Portkey CA Agent Skill",
+      "npm": {
+        "name": "@portkey/ca-agent-skills",
+        "version": "1.1.2"
+      },
+      "repository": {
+        "https": "https://github.com/Portkey-Wallet/ca-agent-skills.git"
+      },
+      "description": "Portkey CA wallet registration/auth/guardian/transfer operations for agents.",
+      "description_zh": "Portkey CA 钱包注册、认证、Guardian 与转账技能。",
+      "capabilities": [
+        "Auth operations: verifier, email code, register, recover, status",
+        "Query operations: account, guardian, assets, chain config",
+        "Tx operations: transfer, contract call, approvals, keystore workflows",
+        "Supports SDK, CLI, MCP, and OpenClaw integration from one codebase."
+      ],
+      "artifacts": {
+        "skillMd": true,
+        "mcpServer": true,
+        "openclaw": true
+      },
+      "setupCommands": {
+        "install": "bun install",
+        "list": "bun run setup list",
+        "openclaw": "bun run setup openclaw",
+        "cursor": "bun run setup cursor",
+        "claudeDesktop": "bun run setup claude"
+      },
+      "clientSupport": {
+        "openclaw": "native",
+        "cursor": "native-setup",
+        "claude_desktop": "native-setup",
+        "claude_code": "manual-mcp",
+        "codex": "manual-cli-or-mcp"
+      },
+      "openclawToolCount": 28
+    },
+    {
+      "id": "portkey-eoa-agent-skills",
+      "displayName": "Portkey EOA Agent Skill",
+      "npm": {
+        "name": "@portkey/eoa-agent-skills",
+        "version": "1.2.1"
+      },
+      "repository": {
+        "https": "https://github.com/Portkey-Wallet/eoa-agent-skills.git"
+      },
+      "description": "Portkey EOA wallet and asset operations for aelf agents.",
+      "description_zh": "Portkey EOA 钱包与资产操作技能。",
+      "capabilities": [
+        "Wallet lifecycle: create, import, list, backup, delete",
+        "Asset/query operations: token balances, NFTs, history, prices",
+        "Transfer and contract execution via CLI/MCP/SDK adapters",
+        "Supports SDK, CLI, MCP, and OpenClaw integration from one codebase."
+      ],
+      "artifacts": {
+        "skillMd": true,
+        "mcpServer": true,
+        "openclaw": true
+      },
+      "setupCommands": {
+        "install": "bun install",
+        "list": "bun run setup list",
+        "openclaw": "bun run setup openclaw",
+        "cursor": "bun run setup cursor",
+        "claudeDesktop": "bun run setup claude"
+      },
+      "clientSupport": {
+        "openclaw": "native",
+        "cursor": "native-setup",
+        "claude_desktop": "native-setup",
+        "claude_code": "manual-mcp",
+        "codex": "manual-cli-or-mcp"
+      },
+      "openclawToolCount": 21
+    },
+    {
+      "id": "tomorrowdao-agent-skills",
+      "displayName": "TomorrowDAO Agent Skill",
+      "npm": {
+        "name": "@tomorrowdao/agent-skills",
+        "version": "0.1.0"
+      },
+      "repository": {
+        "https": "https://github.com/TomorrowDAOProject/tomorrowDAO-skill.git"
+      },
+      "description": "TomorrowDAO governance, BP, and resource operations for agents.",
+      "description_zh": "TomorrowDAO 治理、BP 与资源操作技能。",
+      "capabilities": [
+        "DAO domain: create/update/proposal/discussion operations",
+        "Network governance and BP election operation set",
+        "Resource token trading with unified ToolResult/TxReceipt outputs",
+        "Supports SDK, CLI, MCP, and OpenClaw integration from one codebase."
+      ],
+      "artifacts": {
+        "skillMd": true,
+        "mcpServer": true,
+        "openclaw": true
+      },
+      "setupCommands": {
+        "install": "bun install",
+        "list": "bun run setup list",
+        "openclaw": "bun run setup openclaw",
+        "cursor": "bun run setup cursor",
+        "claudeDesktop": "bun run setup claude"
+      },
+      "clientSupport": {
+        "openclaw": "native",
+        "cursor": "native-setup",
+        "claude_desktop": "native-setup",
+        "claude_code": "manual-mcp",
+        "codex": "manual-cli-or-mcp"
+      },
+      "openclawToolCount": 41
+    }
+  ],
+  "warnings": [
+    "[WARN] portkey/agent-skills-e2e: SKILL.md not found, project skipped"
+  ]
+}
