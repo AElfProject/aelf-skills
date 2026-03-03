@@ -40,6 +40,16 @@
 - 普通私钥场景：`portkey-eoa-agent-skills`
 - CA 身份场景：`portkey-ca-agent-skills`
 
+### 2.4 共享 active wallet context（跨 skill 签名）
+
+1. 钱包创建/解锁后，由钱包 skill 写入 active context：`~/.portkey/skill-wallet/context.v1.json`。
+2. 消费写操作 skill（`awaken`、`eforest`、`tomorrowdao`、`aelf-node`）统一按顺序解析 signer：
+- 显式输入
+- active context
+- 环境变量回退
+3. 若 context 指向加密钱包/keystore，要求工具入参密码或密码 env。
+4. `signerMode=daemon` 为下一轮预埋，本轮返回结构化 not-implemented 错误。
+
 ## 3. 路由兜底策略
 
 1. 当意图不明确时，先用只读能力收集上下文（quote/query/status）。

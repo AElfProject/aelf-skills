@@ -40,6 +40,16 @@ Use this matrix to route user intents across multiple skills.
 - standard private key flows: `portkey-eoa-agent-skills`
 - CA identity flows: `portkey-ca-agent-skills`
 
+### 2.4 shared active wallet context (cross-skill signing)
+
+1. After wallet creation/unlock, wallet skills should update active context at `~/.portkey/skill-wallet/context.v1.json`.
+2. Consumer write skills (`awaken`, `eforest`, `tomorrowdao`, `aelf-node`) should resolve signer in fixed order:
+- explicit input
+- active context
+- env fallback
+3. If context points to encrypted wallet/keystore, require password from tool input or password env.
+4. `signerMode=daemon` is reserved for future rollout and should return a structured not-implemented error in current wave.
+
 ## 3. Fallback strategy
 
 1. If intent is ambiguous, start with read-only operations to gather context.

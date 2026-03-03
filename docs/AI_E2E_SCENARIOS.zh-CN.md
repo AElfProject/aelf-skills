@@ -30,14 +30,16 @@
 1. 先做身份路由判断：
 - 若无 CA 关键词，默认 `portkey-eoa-agent-skills`。
 - 若出现 guardian/CA hash/register/recover，切 `portkey-ca-agent-skills`。
-2. 先执行只读检查（余额、地址合法性、网络配置）。
-3. 再执行写操作（transfer）。
-4. 若用户希望先模拟，优先走 simulate 或 dry-run（若工具支持）。
+2. 确认 active wallet context 已设置（`portkey_set_active_wallet` 或 create/unlock 自动写入）。
+3. 先执行只读检查（余额、地址合法性、网络配置）。
+4. 再执行写操作（transfer），并使用 `signerMode=auto`。
+5. 若 context 指向加密钱包，补充 `password` 入参或密码 env。
+6. 若用户希望先模拟，优先走 simulate 或 dry-run（若工具支持）。
 
 成功标准：
 1. 路由决策可解释（为什么选 EOA/CA）。
 2. 转账前有必要前置检查，避免直接写链。
-3. 输出包含失败恢复建议（余额不足、网络错误、配置缺失）。
+3. 输出包含失败恢复建议（余额不足、网络错误、context/密码缺失）。
 
 ## 场景 3：Awaken Swap 组合编排（钱包 + DEX）
 
@@ -47,10 +49,11 @@
 1. 先用路由矩阵判定钱包身份模式：
 - 无 CA 信号：`portkey-eoa-agent-skills`
 - 有 CA/guardian 信号：`portkey-ca-agent-skills`
-2. 使用钱包 skill 做只读前置检查（余额、地址、网络）。
+2. 使用钱包 skill 做只读前置检查（余额、地址、网络）并确认 active context。
 3. 使用 `awaken-agent-skills` 获取 quote。
-4. 若需要，先执行 allowance/approve，再执行 swap（或优先 simulate/dry-run）。
-5. 返回交易结果并附带本次组合路由说明。
+4. 使用 `signerMode=auto` 执行 allowance/approve 与 swap（或优先 simulate/dry-run）。
+5. 若 context signer 需要解密密码，补充 `password` 入参或密码 env。
+6. 返回交易结果并附带本次组合路由说明。
 
 成功标准：
 1. 明确给出“钱包 skill + Awaken skill”的组合关系。
