@@ -149,13 +149,13 @@ Schema 演进规则：
 <!-- SKILL_TABLE_START -->
 | ID | npm 包名 | 版本 | OpenClaw 工具数 | 描述 |
 |---|---|---:|---:|---|
-| aelf-node-skill | @blockchain-forever/aelf-node-skill | 0.1.0 | 11 | AElf 节点查询与合约调用技能。 |
-| aelfscan-skill | @aelfscan/agent-skills | 0.2.0 | 61 | AelfScan 浏览器数据检索与分析技能。 |
-| awaken-agent-skills | @awaken-finance/agent-kit | 1.2.1 | 11 | Awaken DEX 交易与行情数据技能。 |
-| eforest-agent-skills | @eforest-finance/agent-skills | 0.4.0 | 48 | eForest 代币与 NFT 市场操作技能。 |
-| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.2 | 28 | Portkey CA 钱包注册、认证、Guardian 与转账技能。 |
-| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.1 | 21 | Portkey EOA 钱包与资产操作技能。 |
-| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.0 | 41 | TomorrowDAO 治理、BP 与资源操作技能。 |
+| aelf-node-skill | @blockchain-forever/aelf-node-skill | 0.1.3 | 11 | AElf 节点查询与合约调用技能。 |
+| aelfscan-skill | @aelfscan/agent-skills | 0.2.2 | 61 | AelfScan 浏览器数据检索与分析技能。 |
+| awaken-agent-skills | @awaken-finance/agent-kit | 1.2.4 | 11 | Awaken DEX 交易与行情数据技能。 |
+| eforest-agent-skills | @eforest-finance/agent-skills | 0.4.3 | 48 | eForest 代币与 NFT 市场操作技能。 |
+| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.5 | 28 | Portkey CA 钱包注册、认证、Guardian 与转账技能。 |
+| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.4 | 21 | Portkey EOA 钱包与资产操作技能。 |
+| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.4 | 41 | TomorrowDAO 治理、BP 与资源操作技能。 |
 <!-- SKILL_TABLE_END -->
 
 ## 健康检查
