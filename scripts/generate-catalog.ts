@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { buildCatalog, writeCatalogArtifacts } from './lib/catalog.ts';
+import { maybePrintUpdateReminder } from './lib/update-check.ts';
 
 interface CliOptions {
   workspacePath?: string;
@@ -27,8 +28,10 @@ function parseArgs(): CliOptions {
   };
 }
 
-function main(): void {
+async function main(): Promise<void> {
   try {
+    await maybePrintUpdateReminder();
+
     const options = parseArgs();
     const rootDir = process.cwd();
 
@@ -66,4 +69,4 @@ function main(): void {
   }
 }
 
-main();
+void main();

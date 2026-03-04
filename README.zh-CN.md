@@ -77,6 +77,9 @@ bun run security:audit
 
 # 4) 拉起指定 skill
 ./bootstrap.sh --only aelf-node-skill --skip-install
+
+# 5) 检查 hub/catalog 版本漂移（非阻塞）
+bun run update:check
 ```
 
 ## Bootstrap 命令
@@ -90,6 +93,22 @@ bun run security:audit
 2. 默认执行 install
 3. 默认执行 health
 4. 默认使用 `skills-catalog.json`
+
+## 更新自检
+
+`aelf-skills` 内置了更新提醒，会在 `bootstrap`、`health:check`、`catalog:generate` 运行时做非阻塞检测。
+检测结果使用本地缓存（默认 TTL 24 小时），不会阻塞主流程。
+提醒输出会基于 `lastNotifiedAt` 做节流：默认 24 小时内最多提示一次。
+
+命令：
+1. `bun run update:check`
+2. `bun run update:check -- --force`
+3. `bun run update:check:json`
+
+环境变量：
+1. `AELF_SKILLS_UPDATE_CHECK=0|1`（默认 `1`）
+2. `AELF_SKILLS_UPDATE_TTL_HOURS=24`（默认 `24`）
+3. `AELF_SKILLS_UPDATE_CACHE_PATH=<path>`（默认 `~/.aelf-skills/update-check-cache.json`）
 
 ## 机器清单说明
 

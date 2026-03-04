@@ -77,6 +77,9 @@ bun run security:audit
 
 # 4) Bootstrap selected skills
 ./bootstrap.sh --only aelf-node-skill --skip-install
+
+# 5) Check hub/catalog update drift (non-blocking)
+bun run update:check
 ```
 
 ## Bootstrap CLI
@@ -90,6 +93,22 @@ Defaults:
 2. install enabled
 3. health check enabled
 4. `skills-catalog.json` as catalog source
+
+## Update Self-Check
+
+`aelf-skills` includes built-in update reminders for `bootstrap`, `health:check`, and `catalog:generate`.
+Checks are non-blocking and cache-backed (default TTL 24h).
+Reminder output is throttled to once per TTL window by `lastNotifiedAt`.
+
+Commands:
+1. `bun run update:check`
+2. `bun run update:check -- --force`
+3. `bun run update:check:json`
+
+Environment variables:
+1. `AELF_SKILLS_UPDATE_CHECK=0|1` (default `1`)
+2. `AELF_SKILLS_UPDATE_TTL_HOURS=24` (default `24`)
+3. `AELF_SKILLS_UPDATE_CACHE_PATH=<path>` (default `~/.aelf-skills/update-check-cache.json`)
 
 ## Generated Catalog
 

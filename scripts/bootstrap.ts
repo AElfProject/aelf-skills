@@ -5,6 +5,7 @@ import type { SkillCatalogEntry, SkillsCatalog } from './lib/types.ts';
 import { parseCsv, readJsonFile, requireCommand, runCommand } from './lib/utils.ts';
 import { buildCatalog, writeCatalogArtifacts } from './lib/catalog.ts';
 import { printHealthReport, runHealthCheck } from './lib/health.ts';
+import { maybePrintUpdateReminder } from './lib/update-check.ts';
 
 type SourceMode = 'auto' | 'npm' | 'github' | 'local';
 
@@ -372,8 +373,10 @@ function printBootstrapSummary(results: SkillRunResult[]): void {
   }
 }
 
-function main(): void {
+async function main(): Promise<void> {
   try {
+    await maybePrintUpdateReminder();
+
     const options = parseArgs();
     validatePrerequisites(options.source, options.skipInstall);
 
@@ -437,4 +440,4 @@ function main(): void {
   }
 }
 
-main();
+void main();
