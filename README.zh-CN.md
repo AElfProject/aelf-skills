@@ -121,6 +121,7 @@ Schema 演进规则：
 1. Catalog 字段语义：[docs/CATALOG_SCHEMA.zh-CN.md](docs/CATALOG_SCHEMA.zh-CN.md) | [docs/CATALOG_SCHEMA.md](docs/CATALOG_SCHEMA.md)
 2. Intent 路由矩阵：[docs/SKILL_ROUTING_MATRIX.zh-CN.md](docs/SKILL_ROUTING_MATRIX.zh-CN.md) | [docs/SKILL_ROUTING_MATRIX.md](docs/SKILL_ROUTING_MATRIX.md)
 3. 端到端执行场景（含恢复建议）：[docs/AI_E2E_SCENARIOS.zh-CN.md](docs/AI_E2E_SCENARIOS.zh-CN.md) | [docs/AI_E2E_SCENARIOS.md](docs/AI_E2E_SCENARIOS.md)
+4. Type Safety 基线与推进状态：[docs/TYPE_SAFETY_MATRIX.zh-CN.md](docs/TYPE_SAFETY_MATRIX.zh-CN.md) | [docs/TYPE_SAFETY_MATRIX.md](docs/TYPE_SAFETY_MATRIX.md)
 
 ## 当前技能快照
 

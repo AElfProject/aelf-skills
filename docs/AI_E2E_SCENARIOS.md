@@ -30,14 +30,16 @@ Execution flow:
 1. Perform identity routing first:
 - default `portkey-eoa-agent-skills` when no CA signals exist.
 - switch to `portkey-ca-agent-skills` on guardian/CA hash/register/recover signals.
-2. Run read checks first (balance, address validity, network config).
-3. Execute write operation (transfer).
-4. If user requests safety first, prefer simulate/dry-run when available.
+2. Ensure active wallet context is set (`portkey_set_active_wallet` or create/unlock flow auto-write).
+3. Run read checks first (balance, address validity, network config).
+4. Execute write operation (transfer) with `signerMode=auto`.
+5. If context points to encrypted wallet, provide `password` input or password env.
+6. If user requests safety first, prefer simulate/dry-run when available.
 
 Success criteria:
 1. Routing decision is explainable (why EOA vs CA).
 2. Required pre-write checks are done before sending tx.
-3. Output includes recovery hints (insufficient balance, network issues, missing config).
+3. Output includes recovery hints (insufficient balance, network issues, missing context/password).
 
 ## Scenario 3: Awaken swap composition (Wallet + DEX)
 
@@ -47,10 +49,11 @@ Execution flow:
 1. Use routing matrix to determine wallet identity mode first:
 - no CA signal: `portkey-eoa-agent-skills`
 - with CA/guardian signals: `portkey-ca-agent-skills`
-2. Use wallet skill for pre-checks (balance, address, network).
+2. Use wallet skill for pre-checks (balance, address, network) and confirm active context.
 3. Use `awaken-agent-skills` to fetch quote.
-4. If required, perform allowance/approve, then execute swap (or simulate/dry-run first).
-5. Return tx outcome with explicit composition-routing explanation.
+4. Perform allowance/approve and swap with `signerMode=auto` (shared context first).
+5. If context signer requires password, pass tool input password or password env.
+6. Return tx outcome with explicit composition-routing explanation.
 
 Success criteria:
 1. Clearly states the composition of wallet skill + awaken skill.
