@@ -1,6 +1,6 @@
 {
   "name": "@blockchain-forever/aelf-skills",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Discovery, download, and configuration hub for the aelf agent skill ecosystem.",
   "type": "module",
   "license": "MIT",
