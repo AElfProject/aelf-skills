@@ -50,6 +50,22 @@
 3. 若 context 指向加密钱包/keystore，要求工具入参密码或密码 env。
 4. `signerMode=daemon` 为下一轮预埋，本轮返回结构化 not-implemented 错误。
 
+### 2.5 signer env 优先级矩阵
+
+| Skill | Env 优先级（高 -> 低） | 说明 |
+|---|---|---|
+| `portkey-eoa-agent-skills` | `PORTKEY_PRIVATE_KEY` | 有 active wallet 时优先 context/password |
+| `portkey-ca-agent-skills` | `PORTKEY_PRIVATE_KEY` + `PORTKEY_CA_HASH` + `PORTKEY_CA_ADDRESS` | CA env 需三元组 |
+| `tomorrowdao-agent-skills` | `TMRW_PRIVATE_KEY` -> `AELF_PRIVATE_KEY` -> `PORTKEY_PRIVATE_KEY` | `auto` 模式先 context 再 env |
+| `aelf-node-skill` | `AELF_PRIVATE_KEY` -> `PORTKEY_PRIVATE_KEY` | `auto` 模式先 context 再 env |
+| `awaken-agent-skills` | `PORTKEY_PRIVATE_KEY`（CA）/ `AELF_PRIVATE_KEY`（EOA 兼容） | `signerMode=auto` 优先 context/password |
+| `eforest-agent-skills` | `PORTKEY_PRIVATE_KEY`（CA）/ `AELF_PRIVATE_KEY`（EOA 兼容） | `signerMode=auto` 优先 context/password |
+
+### 2.6 wallet-context schema
+
+Canonical schema：`docs/schemas/wallet-context.v1.schema.json`。  
+各 skill 仓镜像到 `schemas/wallet-context.v1.schema.json`，并在 `deps:check` 中做校验。
+
 ## 3. 路由兜底策略
 
 1. 当意图不明确时，先用只读能力收集上下文（quote/query/status）。
