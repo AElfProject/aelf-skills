@@ -121,6 +121,7 @@ Schema evolution policy:
 1. Catalog field semantics: [docs/CATALOG_SCHEMA.md](docs/CATALOG_SCHEMA.md) | [docs/CATALOG_SCHEMA.zh-CN.md](docs/CATALOG_SCHEMA.zh-CN.md)
 2. Intent routing matrix: [docs/SKILL_ROUTING_MATRIX.md](docs/SKILL_ROUTING_MATRIX.md) | [docs/SKILL_ROUTING_MATRIX.zh-CN.md](docs/SKILL_ROUTING_MATRIX.zh-CN.md)
 3. End-to-end execution scenarios (with recovery): [docs/AI_E2E_SCENARIOS.md](docs/AI_E2E_SCENARIOS.md) | [docs/AI_E2E_SCENARIOS.zh-CN.md](docs/AI_E2E_SCENARIOS.zh-CN.md)
+4. Type safety baseline and rollout status: [docs/TYPE_SAFETY_MATRIX.md](docs/TYPE_SAFETY_MATRIX.md) | [docs/TYPE_SAFETY_MATRIX.zh-CN.md](docs/TYPE_SAFETY_MATRIX.zh-CN.md)
 
 ## Current Skill Snapshot
 
