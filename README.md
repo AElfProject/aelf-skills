@@ -77,6 +77,9 @@ bun run security:audit
 
 # 4) Bootstrap selected skills
 ./bootstrap.sh --only aelf-node-skill --skip-install
+
+# 5) Check hub/catalog update drift (non-blocking)
+bun run update:check
 ```
 
 ## Bootstrap CLI
@@ -90,6 +93,22 @@ Defaults:
 2. install enabled
 3. health check enabled
 4. `skills-catalog.json` as catalog source
+
+## Update Self-Check
+
+`aelf-skills` includes built-in update reminders for `bootstrap`, `health:check`, and `catalog:generate`.
+Checks are non-blocking and cache-backed (default TTL 24h).
+Reminder output is throttled to once per TTL window by `lastNotifiedAt`.
+
+Commands:
+1. `bun run update:check`
+2. `bun run update:check -- --force`
+3. `bun run update:check:json`
+
+Environment variables:
+1. `AELF_SKILLS_UPDATE_CHECK=0|1` (default `1`)
+2. `AELF_SKILLS_UPDATE_TTL_HOURS=24` (default `24`)
+3. `AELF_SKILLS_UPDATE_CACHE_PATH=<path>` (default `~/.aelf-skills/update-check-cache.json`)
 
 ## Generated Catalog
 
@@ -130,13 +149,13 @@ This section is auto-synced by `bun run catalog:generate`.
 <!-- SKILL_TABLE_START -->
 | ID | npm Package | Version | OpenClaw Tools | Description |
 |---|---|---:|---:|---|
-| aelf-node-skill | @blockchain-forever/aelf-node-skill | 0.1.0 | 11 | AElf node querying and contract execution skill for agents. |
-| aelfscan-skill | @aelfscan/agent-skills | 0.2.0 | 61 | AelfScan explorer data retrieval and analytics skill for agents. |
-| awaken-agent-skills | @awaken-finance/agent-kit | 1.2.1 | 11 | Awaken DEX trading and market data operations for agents. |
-| eforest-agent-skills | @eforest-finance/agent-skills | 0.4.0 | 48 | eForest symbol and forest NFT operations for agent workflows. |
-| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.2 | 28 | Portkey CA wallet registration/auth/guardian/transfer operations for agents. |
-| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.1 | 21 | Portkey EOA wallet and asset operations for aelf agents. |
-| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.0 | 41 | TomorrowDAO governance, BP, and resource operations for agents. |
+| aelf-node-skill | @blockchain-forever/aelf-node-skill | 0.1.3 | 11 | AElf node querying and contract execution skill for agents. |
+| aelfscan-skill | @aelfscan/agent-skills | 0.2.2 | 61 | AelfScan explorer data retrieval and analytics skill for agents. |
+| awaken-agent-skills | @awaken-finance/agent-kit | 1.2.4 | 11 | Awaken DEX trading and market data operations for agents. |
+| eforest-agent-skills | @eforest-finance/agent-skills | 0.4.3 | 48 | eForest symbol and forest NFT operations for agent workflows. |
+| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.5 | 28 | Portkey CA wallet registration/auth/guardian/transfer operations for agents. |
+| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.4 | 21 | Portkey EOA wallet and asset operations for aelf agents. |
+| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.4 | 41 | TomorrowDAO governance, BP, and resource operations for agents. |
 <!-- SKILL_TABLE_END -->
 
 ## Health Check

@@ -4,6 +4,7 @@ import type { SkillsCatalog } from './lib/types.ts';
 import { readJsonFile, parseCsv, writeJsonFile } from './lib/utils.ts';
 import { buildCatalog, writeCatalogArtifacts } from './lib/catalog.ts';
 import { printHealthReport, runHealthCheck } from './lib/health.ts';
+import { maybePrintUpdateReminder } from './lib/update-check.ts';
 
 interface CliOptions {
   catalogPath: string;
@@ -58,8 +59,10 @@ function ensureCatalog(catalogPath: string): void {
   writeJsonFile(catalogPath, catalog);
 }
 
-function main(): void {
+async function main(): Promise<void> {
   try {
+    await maybePrintUpdateReminder();
+
     const options = parseArgs();
     ensureCatalog(options.catalogPath);
 
@@ -97,4 +100,4 @@ function main(): void {
   }
 }
 
-main();
+void main();
