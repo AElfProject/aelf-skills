@@ -33,6 +33,11 @@ activation:
 - Sensitive data handling.
 - Confirmation requirements for write actions.
 
+## Distribution / Activation
+- GitHub repo/tree URLs are discovery-only for AI hosts.
+- Preferred IronClaw activation command from npm: `bunx -p <package-name> <setup-bin> ironclaw`
+- Preferred OpenClaw activation command from npm when managed install is unavailable: `bunx -p <package-name> <setup-bin> openclaw`
+
 ## Limits / Non-goals
 - What this skill does not do.
 - Known constraints and risk boundaries.
@@ -42,4 +47,5 @@ Minimum checks:
 1. Front matter has `name` and `description`.
 2. If IronClaw routing is supported, include `version` and `activation.*`.
 3. `## Capabilities` section exists and uses bullet items.
-4. `## Limits / Non-goals` section exists.
+4. `## Distribution / Activation` states discovery vs activation.
+5. `## Limits / Non-goals` section exists.

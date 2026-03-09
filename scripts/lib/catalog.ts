@@ -12,7 +12,14 @@ import {
   slugifyId,
   writeJsonFile,
 } from './utils.ts';
-import type { SkillCatalogEntry, SkillsCatalog, WorkspaceConfig, WorkspaceProject } from './types.ts';
+import type {
+  SkillCatalogEntry,
+  SkillClientInstall,
+  SkillClientInstallEntry,
+  SkillsCatalog,
+  WorkspaceConfig,
+  WorkspaceProject,
+} from './types.ts';
 
 const SKILL_TABLE_START = '<!-- SKILL_TABLE_START -->';
 const SKILL_TABLE_END = '<!-- SKILL_TABLE_END -->';
@@ -28,6 +35,7 @@ const DESCRIPTION_ZH_OVERRIDES: Record<string, string> = {
   '@portkey/eoa-agent-skills': 'Portkey EOA 钱包与资产操作技能。',
   '@tomorrowdao/agent-skills': 'TomorrowDAO 治理、BP 与资源操作技能。',
 };
+const CLAWHUB_ID_OVERRIDES: Record<string, string> = {};
 
 interface BuiltSkillCandidate {
   entry: SkillCatalogEntry;
@@ -51,6 +59,7 @@ interface PackageJsonLike {
   version?: string;
   description?: string;
   scripts?: Record<string, string>;
+  bin?: string | Record<string, string>;
   repository?: string | { type?: string; url?: string };
 }
 
@@ -146,6 +155,7 @@ function buildSkillEntry(
   }
 
   const setupBase = detectSetupBase(pkg, projectPath);
+  const setupBin = detectSetupBin(pkg);
   const capabilities = extractSectionBullets(skillMd, 'Capabilities');
   const description = frontMatter.description || pkg.description || `Agent skill package ${pkg.name}`;
 
@@ -155,6 +165,11 @@ function buildSkillEntry(
 
   const openclawToolCount = getOpenclawToolCount(openclawPath, warnings, projectPath, includeLocalPaths);
   const repositoryHttps = resolveRepositoryHttps(pkg, projectPath);
+  const clawhubId = resolveClawhubId(pkg.name);
+  const hasMcp = existsSync(mcpServerPath) || Boolean(pkg.scripts?.mcp);
+  const hasOpenclaw = existsSync(openclawPath);
+  const hasCli = Boolean(pkg.scripts?.cli);
+  const hasSetup = Boolean(setupBase);
 
   return {
     id: frontMatter.name ? slugifyId(frontMatter.name) : slugifyId(pkg.name),
@@ -166,20 +181,32 @@ function buildSkillEntry(
     repository: {
       ...(repositoryHttps ? { https: repositoryHttps } : {}),
     },
+    distributionSources: {
+      ...(repositoryHttps ? { githubRepo: repositoryHttps } : {}),
+      npmPackage: pkg.name,
+      ...(clawhubId ? { clawhubId } : {}),
+    },
     description,
     ...(zhDescription ? { description_zh: zhDescription } : {}),
     capabilities,
     artifacts: {
       skillMd: true,
-      mcpServer: existsSync(mcpServerPath) || Boolean(pkg.scripts?.mcp),
-      openclaw: existsSync(openclawPath),
+      mcpServer: hasMcp,
+      openclaw: hasOpenclaw,
     },
     setupCommands: buildSetupCommands(setupBase),
     clientSupport: buildClientSupport({
-      hasMcp: existsSync(mcpServerPath) || Boolean(pkg.scripts?.mcp),
-      hasOpenclaw: existsSync(openclawPath),
-      hasCli: Boolean(pkg.scripts?.cli),
-      hasSetup: Boolean(setupBase),
+      hasMcp,
+      hasOpenclaw,
+      hasCli,
+      hasSetup,
+    }),
+    clientInstall: buildClientInstall({
+      packageName: pkg.name,
+      setupBin,
+      clawhubId,
+      hasOpenclaw,
+      hasIronclaw: hasMcp && hasSetup,
     }),
     openclawToolCount,
     ...(includeLocalPaths ? { sourcePath: projectPath } : {}),
@@ -301,6 +328,38 @@ function detectSetupBase(pkg: PackageJsonLike, projectPath: string): string | un
   return undefined;
 }
 
+function detectSetupBin(pkg: PackageJsonLike): string | undefined {
+  if (!pkg.bin) return undefined;
+
+  if (typeof pkg.bin === 'string') {
+    return normalizeSetupTarget(pkg.bin) ? defaultBinName(pkg.name) : undefined;
+  }
+
+  for (const [binName, target] of Object.entries(pkg.bin)) {
+    if (normalizeSetupTarget(target)) {
+      return binName;
+    }
+  }
+
+  return undefined;
+}
+
+function defaultBinName(packageName?: string): string | undefined {
+  if (!packageName) return undefined;
+  const [, unscoped = packageName] = packageName.split('/');
+  return unscoped;
+}
+
+function normalizeSetupTarget(target: string): boolean {
+  const normalized = target.replace(/\\/g, '/').replace(/^\.\//, '');
+  return normalized === 'bin/setup.js' || normalized === 'bin/setup.ts';
+}
+
+function resolveClawhubId(packageName?: string): string | undefined {
+  if (!packageName) return undefined;
+  return CLAWHUB_ID_OVERRIDES[packageName];
+}
+
 function buildSetupCommands(setupBase?: string) {
   const install = 'bun install';
   if (!setupBase) return { install };
@@ -332,6 +391,64 @@ function buildClientSupport(input: {
     ironclaw: input.hasMcp ? nativeMcp : 'unsupported',
     claude_code: input.hasMcp ? 'manual-mcp' : 'unsupported',
     codex: input.hasMcp || input.hasCli ? 'manual-cli-or-mcp' : 'unsupported',
+  };
+}
+
+function buildClientInstall(input: {
+  packageName: string;
+  setupBin?: string;
+  clawhubId?: string;
+  hasOpenclaw: boolean;
+  hasIronclaw: boolean;
+}): SkillClientInstall {
+  return {
+    openclaw: buildOpenclawInstall(input),
+    ironclaw: buildIronclawInstall(input),
+  };
+}
+
+function buildOpenclawInstall(input: {
+  packageName: string;
+  setupBin?: string;
+  clawhubId?: string;
+  hasOpenclaw: boolean;
+}): SkillClientInstallEntry {
+  if (!input.hasOpenclaw) {
+    return { source: 'none', mode: 'unsupported' };
+  }
+
+  if (input.clawhubId) {
+    return {
+      source: 'clawhub',
+      mode: 'managed-install',
+    };
+  }
+
+  if (!input.setupBin) {
+    return { source: 'none', mode: 'unsupported' };
+  }
+
+  return {
+    source: 'npm',
+    mode: 'package-setup',
+    installCommand: `bunx -p ${input.packageName} ${input.setupBin} openclaw`,
+  };
+}
+
+function buildIronclawInstall(input: {
+  packageName: string;
+  setupBin?: string;
+  hasIronclaw: boolean;
+}): SkillClientInstallEntry {
+  if (!input.hasIronclaw || !input.setupBin) {
+    return { source: 'none', mode: 'unsupported' };
+  }
+
+  return {
+    source: 'npm',
+    mode: 'trusted-local-install',
+    installCommand: `bunx -p ${input.packageName} ${input.setupBin} ironclaw`,
+    requiresTrustPromotion: true,
   };
 }
 

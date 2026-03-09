@@ -30,15 +30,17 @@ Each `skills[]` item includes:
 2. `displayName`: human-readable name.
 3. `npm.name` / `npm.version`: default package coordinate and version.
 4. `repository.https`: github fallback when npm flow fails.
-5. `description`: high-level summary for routing.
-6. `description_zh`: optional Chinese description, preferred by Chinese rendering and fallback to `description` when missing.
-7. `capabilities`: short capability sentences for intent matching.
-8. `artifacts`: boolean availability flags of required artifacts.
-9. `setupCommands`: recommended setup command map, including optional `ironclaw`.
-10. `clientSupport`: support level matrix by client type, including `ironclaw`.
-11. `openclawToolCount`: number of OpenClaw tools.
-12. `dependsOn`: optional direct dependency skill id list for composition/order-aware execution.
-13. `sourcePath`: local-only optional field, omitted in public catalog by default.
+5. `distributionSources`: machine-readable discovery sources (`githubRepo`, `npmPackage`, optional `clawhubId`).
+6. `description`: high-level summary for routing.
+7. `description_zh`: optional Chinese description, preferred by Chinese rendering and fallback to `description` when missing.
+8. `capabilities`: short capability sentences for intent matching.
+9. `artifacts`: boolean availability flags of required artifacts.
+10. `setupCommands`: compatibility display commands for humans/local repos.
+11. `clientSupport`: support level matrix by client type, including `ironclaw`.
+12. `clientInstall`: machine-executable activation contract for `openclaw` and `ironclaw`.
+13. `openclawToolCount`: number of OpenClaw tools.
+14. `dependsOn`: optional direct dependency skill id list for composition/order-aware execution.
+15. `sourcePath`: local-only optional field, omitted in public catalog by default.
 
 ## 3. `artifacts` semantics
 
@@ -51,7 +53,23 @@ Each `skills[]` item includes:
 3. `openclaw: true`
 - Means `openclaw.json` is present for OpenClaw tool descriptions.
 
-## 4. `clientSupport` enum semantics
+## 4. `distributionSources` and `clientInstall`
+
+1. `distributionSources`
+- Describes where a host can discover a skill.
+- `githubRepo` is for source lookup only, not final IronClaw activation.
+- `npmPackage` is the default executable distribution coordinate.
+- `clawhubId` is optional and only present when OpenClaw managed install is available.
+
+2. `clientInstall.openclaw`
+- `managed-install`: host should use ClawHub / managed install, no local command required.
+- `package-setup`: host should execute `installCommand`, typically `bunx -p <pkg> <setup-bin> openclaw`.
+
+3. `clientInstall.ironclaw`
+- `trusted-local-install`: host should execute `installCommand`, typically `bunx -p <pkg> <setup-bin> ironclaw`.
+- `requiresTrustPromotion: true` means the host must surface a trust prompt because trusted local files and MCP config will be written.
+
+## 5. `clientSupport` enum semantics
 
 1. `native`
 - Usable out-of-box, usually with official artifacts and setup commands.
@@ -71,7 +89,7 @@ Each `skills[]` item includes:
 6. `unsupported`
 - Not supported for that client at the moment.
 
-## 5. `capabilities` writing guidelines
+## 6. `capabilities` writing guidelines
 
 Recommended style:
 1. Start with action verbs (for example `Query block status`, `Create wallet`).
@@ -79,7 +97,7 @@ Recommended style:
 3. Avoid vague wording such as `handle everything`.
 4. Include boundary hints such as `read-only` and `simulate/send`.
 
-## 6. Modes and compatibility
+## 7. Modes and compatibility
 
 1. Public mode (default)
 - Command: `bun run catalog:generate`
@@ -91,7 +109,8 @@ Recommended style:
 - Output: `skills-catalog.local.json`
 - Characteristic: includes `sourcePath`, intended for local machine only.
 
-3. Migration note (1.2.0 -> 1.3.0)
+3. Additive note (1.3.0)
 - Added `setupCommands.ironclaw` for trusted-skill setup guidance.
 - Added `clientSupport.ironclaw` to the client support matrix.
+- Added `distributionSources` and `clientInstall` to distinguish discovery from activation.
 - Existing consumers should ignore unknown fields if not needed.

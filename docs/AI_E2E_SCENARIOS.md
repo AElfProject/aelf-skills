@@ -71,7 +71,7 @@ Execution flow:
 - `docs/schemas/skill-frontmatter.schema.json`
 - `docs/schemas/openclaw.schema.json`
 - `docs/schemas/skills-catalog.schema.json`
-3. If the skill supports MCP + setup, ensure catalog metadata exposes `setupCommands.ironclaw` and `clientSupport.ironclaw`.
+3. If the skill supports MCP + setup, ensure catalog metadata exposes `setupCommands.ironclaw`, `clientSupport.ironclaw`, `distributionSources`, and `clientInstall`.
 4. Add new path to `workspace.json` with `${SKILLS_BASE}` placeholder.
 5. If dependency exists, add direct `dependsOn` entries.
 6. Run gates in order:
@@ -88,6 +88,10 @@ Success criteria:
 1. Catalog generation passes with schema `1.3.0`.
 2. No gate failure (`health/readme/security/bootstrap`).
 3. PR description contains Goal/Non-goal, key files, contract mapping, validation outputs, risk, rollback.
+
+Additional install-routing rule:
+1. GitHub repo URLs are discovery-only.
+2. For OpenClaw/IronClaw execution, prefer `clientInstall.*.installCommand` when present.
 
 ## Common Recovery Template
 

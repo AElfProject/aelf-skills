@@ -26,11 +26,13 @@
           "displayName",
           "npm",
           "repository",
+          "distributionSources",
           "description",
           "capabilities",
           "artifacts",
           "setupCommands",
           "clientSupport",
+          "clientInstall",
           "openclawToolCount"
         ],
         "additionalProperties": true,
@@ -49,6 +51,15 @@
             "type": "object",
             "properties": {
               "https": { "type": "string", "format": "uri" }
+            }
+          },
+          "distributionSources": {
+            "type": "object",
+            "required": ["npmPackage"],
+            "properties": {
+              "githubRepo": { "type": "string", "format": "uri" },
+              "npmPackage": { "type": "string", "minLength": 1 },
+              "clawhubId": { "type": "string", "minLength": 1 }
             }
           },
           "description": { "type": "string", "minLength": 1 },
@@ -105,6 +116,44 @@
               "codex": {
                 "type": "string",
                 "enum": ["native", "native-setup", "manual-mcp", "manual-cli-or-mcp", "manual", "unsupported"]
+              }
+            }
+          },
+          "clientInstall": {
+            "type": "object",
+            "required": ["openclaw", "ironclaw"],
+            "properties": {
+              "openclaw": {
+                "type": "object",
+                "required": ["source", "mode"],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "enum": ["clawhub", "npm", "none"]
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": ["managed-install", "package-setup", "trusted-local-install", "unsupported"]
+                  },
+                  "installCommand": { "type": "string" },
+                  "requiresTrustPromotion": { "type": "boolean" }
+                }
+              },
+              "ironclaw": {
+                "type": "object",
+                "required": ["source", "mode"],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "enum": ["clawhub", "npm", "none"]
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": ["managed-install", "package-setup", "trusted-local-install", "unsupported"]
+                  },
+                  "installCommand": { "type": "string" },
+                  "requiresTrustPromotion": { "type": "boolean" }
+                }
               }
             }
           },

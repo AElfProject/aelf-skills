@@ -5,6 +5,7 @@ import { commandExists, readJsonFile } from './utils.ts';
 
 interface PackageJsonLike {
   scripts?: Record<string, string>;
+  bin?: string | Record<string, string>;
 }
 
 export interface SkillHealthResult {
@@ -15,6 +16,7 @@ export interface SkillHealthResult {
   checks: {
     packageJson: boolean;
     setupScript: boolean;
+    setupBin: boolean;
     mcpServer: boolean;
     openclawJson: boolean;
     cliScript: boolean;
@@ -75,12 +77,12 @@ export function printHealthReport(report: HealthCheckReport): void {
   }
 
   console.log('\n[Health Check] Skill matrix');
-  console.log('| Skill ID | Status | package.json | setup | MCP | OpenClaw | CLI |');
-  console.log('|---|---|---:|---:|---:|---:|---:|');
+  console.log('| Skill ID | Status | package.json | setup | setup-bin | MCP | OpenClaw | CLI |');
+  console.log('|---|---|---:|---:|---:|---:|---:|---:|');
 
   for (const row of report.results) {
     console.log(
-      `| ${row.id} | ${row.status.toUpperCase()} | ${toFlag(row.checks.packageJson)} | ${toFlag(row.checks.setupScript)} | ${toFlag(row.checks.mcpServer)} | ${toFlag(row.checks.openclawJson)} | ${toFlag(row.checks.cliScript)} |`,
+      `| ${row.id} | ${row.status.toUpperCase()} | ${toFlag(row.checks.packageJson)} | ${toFlag(row.checks.setupScript)} | ${toFlag(row.checks.setupBin)} | ${toFlag(row.checks.mcpServer)} | ${toFlag(row.checks.openclawJson)} | ${toFlag(row.checks.cliScript)} |`,
     );
   }
 
@@ -111,6 +113,7 @@ function checkSkill(skill: SkillCatalogEntry, skillDir: string): SkillHealthResu
       checks: {
         packageJson: false,
         setupScript: false,
+        setupBin: false,
         mcpServer: false,
         openclawJson: false,
         cliScript: false,
@@ -125,6 +128,7 @@ function checkSkill(skill: SkillCatalogEntry, skillDir: string): SkillHealthResu
   const checks = {
     packageJson: existsSync(packagePath),
     setupScript: false,
+    setupBin: false,
     mcpServer: existsSync(mcpPath),
     openclawJson: existsSync(openclawPath),
     cliScript: false,
@@ -143,6 +147,7 @@ function checkSkill(skill: SkillCatalogEntry, skillDir: string): SkillHealthResu
         Boolean(pkgScripts.setup) ||
         existsSync(path.join(skillDir, 'bin', 'setup.ts')) ||
         existsSync(path.join(skillDir, 'bin', 'setup.js'));
+      checks.setupBin = hasSetupBinary(pkg);
       checks.mcpServer = checks.mcpServer || Boolean(pkgScripts.mcp);
       checks.cliScript = Boolean(pkgScripts.cli);
     } catch {
@@ -154,7 +159,11 @@ function checkSkill(skill: SkillCatalogEntry, skillDir: string): SkillHealthResu
 
   let status: SkillHealthResult['status'] = 'pass';
   if (issues.length > 0) {
-    status = issues.some(issue => issue.includes('missing')) ? 'fail' : 'warn';
+    status = issues.some(
+      issue => issue.includes('missing') || issue.includes('not executable'),
+    )
+      ? 'fail'
+      : 'warn';
   }
 
   return {
@@ -182,6 +191,9 @@ function validateExpectedSupport(
   if (needsSetup && !checks.setupScript) {
     issues.push('declared native-setup but setup command not available');
   }
+  if (needsSetup && !checks.setupBin) {
+    issues.push('declared native-setup but npm installer bin is missing');
+  }
 
   const needsMcp =
     skill.clientSupport.cursor !== 'unsupported' ||
@@ -196,6 +208,48 @@ function validateExpectedSupport(
   if (needsCli && !checks.mcpServer && !checks.cliScript) {
     issues.push('codex support declared but neither MCP nor CLI script is available');
   }
+
+  if (skill.clientSupport.ironclaw === 'native-setup') {
+    if (skill.clientInstall.ironclaw.mode !== 'trusted-local-install') {
+      issues.push('ironclaw native-setup declared but clientInstall.ironclaw is not executable');
+    }
+    if (!skill.distributionSources.npmPackage) {
+      issues.push('ironclaw native-setup declared but distributionSources.npmPackage missing');
+    }
+    if (!skill.clientInstall.ironclaw.installCommand) {
+      issues.push('ironclaw native-setup declared but installCommand missing');
+    }
+  }
+
+  if (skill.clientSupport.openclaw === 'native') {
+    if (skill.clientInstall.openclaw.mode === 'managed-install') {
+      if (!skill.distributionSources.clawhubId) {
+        issues.push('openclaw managed-install declared but distributionSources.clawhubId missing');
+      }
+    } else if (skill.clientInstall.openclaw.mode === 'package-setup') {
+      if (!skill.distributionSources.npmPackage) {
+        issues.push('openclaw package-setup declared but distributionSources.npmPackage missing');
+      }
+      if (!skill.clientInstall.openclaw.installCommand) {
+        issues.push('openclaw package-setup declared but installCommand missing');
+      }
+    } else {
+      issues.push('openclaw native support declared but clientInstall.openclaw is not executable');
+    }
+  }
+}
+
+function hasSetupBinary(pkg: PackageJsonLike): boolean {
+  if (!pkg.bin) return false;
+  if (typeof pkg.bin === 'string') {
+    return isSetupTarget(pkg.bin);
+  }
+  return Object.values(pkg.bin).some(target => isSetupTarget(target));
+}
+
+function isSetupTarget(target: string): boolean {
+  const normalized = target.replace(/\\/g, '/').replace(/^\.\//, '');
+  return normalized === 'bin/setup.js' || normalized === 'bin/setup.ts';
 }
 
 function resolveSkillDir(skill: SkillCatalogEntry, skillsRoot?: string): string {

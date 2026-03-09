@@ -13,6 +13,7 @@ Copy and check this list in your PR.
 ## 2. Minimum Artifacts (MUST)
 
 - [ ] `package.json` exists with `name` and `version`.
+- [ ] `package.json bin` exposes a stable setup executable (`bin/setup.js|bin/setup.ts`).
 - [ ] `SKILL.md` exists with front matter `name` and `description`.
 - [ ] MCP support exists: `src/mcp/server.ts` or `scripts.mcp`.
 - [ ] If OpenClaw native is declared, `openclaw.json` exists.
@@ -25,6 +26,7 @@ Copy and check this list in your PR.
 - [ ] `SKILL.md` front matter matches `docs/schemas/skill-frontmatter.schema.json`.
 - [ ] `openclaw.json` (if present) matches `docs/schemas/openclaw.schema.json`.
 - [ ] Generated `skills-catalog.json` matches `docs/schemas/skills-catalog.schema.json`.
+- [ ] Generated catalog includes `distributionSources` and `clientInstall`.
 
 ## 4. Architecture and Product Requirements
 
