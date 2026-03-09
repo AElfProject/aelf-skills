@@ -1,6 +1,6 @@
 [中文](CATALOG_SCHEMA.zh-CN.md) | English
 
-# Catalog Schema Semantics (v1.2.0)
+# Catalog Schema Semantics (v1.3.0)
 
 This document defines field semantics of `skills-catalog.json` for both AI and humans.
 
@@ -8,7 +8,7 @@ This document defines field semantics of `skills-catalog.json` for both AI and h
 
 ```json
 {
-  "schemaVersion": "1.2.0",
+  "schemaVersion": "1.3.0",
   "generatedAt": "ISO-8601",
   "source": "workspace.json",
   "skills": [],
@@ -17,7 +17,7 @@ This document defines field semantics of `skills-catalog.json` for both AI and h
 ```
 
 Field meanings:
-1. `schemaVersion`: schema version, currently `1.2.0`.
+1. `schemaVersion`: schema version, currently `1.3.0`.
 2. `generatedAt`: generation timestamp (UTC ISO string).
 3. `source`: source file name used to build the catalog.
 4. `skills`: skill entries.
@@ -34,8 +34,8 @@ Each `skills[]` item includes:
 6. `description_zh`: optional Chinese description, preferred by Chinese rendering and fallback to `description` when missing.
 7. `capabilities`: short capability sentences for intent matching.
 8. `artifacts`: boolean availability flags of required artifacts.
-9. `setupCommands`: recommended setup command map.
-10. `clientSupport`: support level matrix by client type.
+9. `setupCommands`: recommended setup command map, including optional `ironclaw`.
+10. `clientSupport`: support level matrix by client type, including `ironclaw`.
 11. `openclawToolCount`: number of OpenClaw tools.
 12. `dependsOn`: optional direct dependency skill id list for composition/order-aware execution.
 13. `sourcePath`: local-only optional field, omitted in public catalog by default.
@@ -91,7 +91,7 @@ Recommended style:
 - Output: `skills-catalog.local.json`
 - Characteristic: includes `sourcePath`, intended for local machine only.
 
-3. Migration note (1.1.1 -> 1.2.0)
-- Added optional `dependsOn` to describe direct cross-skill dependencies.
-- Optional `description_zh` (introduced in `1.1.1`) remains supported.
+3. Migration note (1.2.0 -> 1.3.0)
+- Added `setupCommands.ironclaw` for trusted-skill setup guidance.
+- Added `clientSupport.ironclaw` to the client support matrix.
 - Existing consumers should ignore unknown fields if not needed.

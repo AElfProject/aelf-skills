@@ -176,7 +176,9 @@ function validateExpectedSupport(
   }
 
   const needsSetup =
-    skill.clientSupport.cursor === 'native-setup' || skill.clientSupport.claude_desktop === 'native-setup';
+    skill.clientSupport.cursor === 'native-setup' ||
+    skill.clientSupport.claude_desktop === 'native-setup' ||
+    skill.clientSupport.ironclaw === 'native-setup';
   if (needsSetup && !checks.setupScript) {
     issues.push('declared native-setup but setup command not available');
   }
@@ -184,6 +186,7 @@ function validateExpectedSupport(
   const needsMcp =
     skill.clientSupport.cursor !== 'unsupported' ||
     skill.clientSupport.claude_desktop !== 'unsupported' ||
+    skill.clientSupport.ironclaw !== 'unsupported' ||
     skill.clientSupport.claude_code !== 'unsupported';
   if (needsMcp && !checks.mcpServer) {
     issues.push('MCP support declared but src/mcp/server.ts missing');

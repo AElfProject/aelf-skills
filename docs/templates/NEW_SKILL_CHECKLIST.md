@@ -17,6 +17,7 @@ Copy and check this list in your PR.
 - [ ] MCP support exists: `src/mcp/server.ts` or `scripts.mcp`.
 - [ ] If OpenClaw native is declared, `openclaw.json` exists.
 - [ ] If native-setup is declared, `scripts.setup` or `bin/setup.ts|bin/setup.js` exists.
+- [ ] If IronClaw native setup is declared, `setup ironclaw` is supported and installs a trusted skill path.
 
 ## 3. Schema Alignment
 

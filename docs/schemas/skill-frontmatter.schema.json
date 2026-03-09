@@ -11,6 +11,11 @@
       "minLength": 1,
       "description": "Canonical skill id source."
     },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional skill/package version string for routing/runtime compatibility."
+    },
     "description": {
       "type": "string",
       "minLength": 1,
@@ -20,6 +25,28 @@
       "type": "string",
       "minLength": 1,
       "description": "Optional Chinese description for README.zh-CN table rendering."
+    },
+    "activation": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "keywords": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "exclude_keywords": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "max_context_tokens": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
     }
   }
 }

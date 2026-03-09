@@ -12,6 +12,7 @@ export interface SkillSetupCommands {
   openclaw?: string;
   cursor?: string;
   claudeDesktop?: string;
+  ironclaw?: string;
 }
 
 export interface SkillArtifacts {
@@ -24,6 +25,7 @@ export interface SkillClientSupport {
   openclaw: ClientSupportLevel;
   cursor: ClientSupportLevel;
   claude_desktop: ClientSupportLevel;
+  ironclaw: ClientSupportLevel;
   claude_code: ClientSupportLevel;
   codex: ClientSupportLevel;
 }
@@ -54,7 +56,7 @@ export interface SkillCatalogEntry {
 }
 
 export interface SkillsCatalog {
-  schemaVersion: '1.2.0';
+  schemaVersion: '1.3.0';
   generatedAt: string;
   source: string;
   skills: SkillCatalogEntry[];

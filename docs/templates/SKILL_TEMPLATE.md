@@ -7,8 +7,17 @@ Use this template as the minimum structure required by `docs/AI_SKILL_CONTRACT.m
 ```md
 ---
 name: "<skill-id>"
+version: "<package-version, optional but recommended for IronClaw>"
 description: "<one-line English description>"
 description_zh: "<one-line Chinese description, optional but recommended>"
+activation:
+  keywords:
+    - "<keyword-1>"
+  exclude_keywords:
+    - "<exclude-keyword-1>"
+  tags:
+    - "<tag-1>"
+  max_context_tokens: 1600
 ---
 
 # <Display Name>
@@ -31,5 +40,6 @@ description_zh: "<one-line Chinese description, optional but recommended>"
 
 Minimum checks:
 1. Front matter has `name` and `description`.
-2. `## Capabilities` section exists and uses bullet items.
-3. `## Limits / Non-goals` section exists.
+2. If IronClaw routing is supported, include `version` and `activation.*`.
+3. `## Capabilities` section exists and uses bullet items.
+4. `## Limits / Non-goals` section exists.

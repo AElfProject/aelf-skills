@@ -30,7 +30,7 @@
 本入口仓只负责 **发现、下载、安装、能力索引**。
 
 不会替代各 skill 仓内部客户端接入逻辑。
-`OpenClaw`、`Cursor`、`Claude Desktop`、`Codex`、`Claude Code` 的具体接入仍由各 skill 仓负责。
+`OpenClaw`、`Cursor`、`Claude Desktop`、`IronClaw`、`Codex`、`Claude Code` 的具体接入仍由各 skill 仓负责。
 AI Agent 可直接跳转到 [AI 导航入口](#ai-导航入口) 查看路由与执行指引。
 
 ## 环境依赖
@@ -120,9 +120,9 @@ bun run update:check
 3. `repository.https`
 4. `description`, `capabilities`
 5. `artifacts`（`skillMd`, `mcpServer`, `openclaw`）
-6. `setupCommands`
-7. `clientSupport`
-8. `dependsOn`（可选，schema `1.2.0`）
+6. `setupCommands`（例如 `claudeDesktop`、`cursor`、`openclaw`、`ironclaw`）
+7. `clientSupport`（例如 `claude_desktop`、`cursor`、`ironclaw`、`codex`）
+8. `dependsOn`（可选，schema `1.3.0`）
 
 Schema 参考：
 1. `docs/schemas/workspace.schema.json`
@@ -131,7 +131,7 @@ Schema 参考：
 4. `docs/schemas/skills-catalog.schema.json`
 
 Schema 演进规则：
-1. `patch`（`1.2.x`）：文案/文档修订，不改变字段语义。
+1. `patch`（`1.3.x`）：文案/文档修订，不改变字段语义。
 2. `minor`（`1.x.0`）：向后兼容的字段新增。
 3. `major`（`x.0.0`）：仅用于破坏性变更。
 
@@ -153,7 +153,7 @@ Schema 演进规则：
 | aelfscan-skill | @aelfscan/agent-skills | 0.2.2 | 61 | AelfScan 浏览器数据检索与分析技能。 |
 | awaken-agent-skills | @awaken-finance/agent-kit | 1.2.4 | 11 | Awaken DEX 交易与行情数据技能。 |
 | eforest-agent-skills | @eforest-finance/agent-skills | 0.4.3 | 48 | eForest 代币与 NFT 市场操作技能。 |
-| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.5 | 28 | Portkey CA 钱包注册、认证、Guardian 与转账技能。 |
+| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.6 | 28 | Portkey CA 钱包注册、认证、Guardian 与转账技能。 |
 | portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.4 | 21 | Portkey EOA 钱包与资产操作技能。 |
 | tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.4 | 41 | TomorrowDAO 治理、BP 与资源操作技能。 |
 <!-- SKILL_TABLE_END -->

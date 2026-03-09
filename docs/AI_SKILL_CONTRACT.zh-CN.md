@@ -49,13 +49,15 @@ AI 输出 `MUST NOT` 停留在高层建议而不落地到文件和命令。
 2. 目标 skill 仓
 - `MUST` 存在 `package.json` 且有 `name`、`version`。
 - `MUST` 存在 `SKILL.md` front matter 且有 `name`、`description`。
+- 若 skill 支持 IronClaw 路由，`SHOULD` 增加 `version` 与 `activation.*` 字段。
 - `MUST` 满足 `docs/schemas/skill-frontmatter.schema.json`。
 - `MUST` 提供 MCP 支持：`src/mcp/server.ts` 或 `scripts.mcp`。
 - 声明 OpenClaw native 时，`MUST` 存在 `openclaw.json` 且满足 `docs/schemas/openclaw.schema.json`。
 - 声明 native setup 时，`MUST` 存在 `scripts.setup` 或 `bin/setup.ts|bin/setup.js`。
+- 若声明 IronClaw native setup，setup 入口必须支持 `bun run setup ironclaw`（或等价 `bin/setup.ts ironclaw`）。
 
 3. 生成产物
-- `MUST` 输出 schemaVersion `1.2.0` 的 catalog。
+- `MUST` 输出 schemaVersion `1.3.0` 的 catalog。
 - `MUST` 满足 `docs/schemas/skills-catalog.schema.json`。
 - 若 workspace 声明 `dependsOn`，catalog `MUST` 同步输出。
 
@@ -117,7 +119,7 @@ bun run security:audit
 ## 10. 完成定义（Definition of Done）
 
 满足以下条件才算完成：
-1. 新 skill 出现在 `skills-catalog.json`（schema `1.2.0`）。
+1. 新 skill 出现在 `skills-catalog.json`（schema `1.3.0`）。
 2. `health:check` 无 fail。
 3. `readme:check` 通过。
 4. `security:audit` 通过。

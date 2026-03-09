@@ -7,8 +7,17 @@
 ```md
 ---
 name: "<skill-id>"
+version: "<包版本，可选但推荐用于 IronClaw>"
 description: "<英文一句话描述>"
 description_zh: "<中文一句话描述，可选但推荐>"
+activation:
+  keywords:
+    - "<keyword-1>"
+  exclude_keywords:
+    - "<exclude-keyword-1>"
+  tags:
+    - "<tag-1>"
+  max_context_tokens: 1600
 ---
 
 # <展示名称>
@@ -31,5 +40,6 @@ description_zh: "<中文一句话描述，可选但推荐>"
 
 最低检查项：
 1. front matter 包含 `name` 和 `description`。
-2. 存在 `## Capabilities` 且为列表。
-3. 存在 `## Limits / Non-goals`。
+2. 若支持 IronClaw 路由，补充 `version` 与 `activation.*`。
+3. 存在 `## Capabilities` 且为列表。
+4. 存在 `## Limits / Non-goals`。

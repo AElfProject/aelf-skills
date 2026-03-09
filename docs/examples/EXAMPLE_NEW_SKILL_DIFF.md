@@ -33,7 +33,7 @@ This example shows the minimum complete change set for adding one skill.
 ```text
 $ bun run catalog:generate
 [DONE] Generated catalog: .../skills-catalog.json
-[INFO] Schema: 1.2.0
+[INFO] Schema: 1.3.0
 
 $ bun run health:check
 [Health Check] Summary: total=8, pass=8, warn=0, fail=0

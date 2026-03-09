@@ -30,7 +30,7 @@ Failure rule: use Common Recovery Template in docs/AI_E2E_SCENARIOS.md.
 This hub focuses on **discovery, download, install, and capability indexing**.
 
 It does **not** replace each skill repository's own client integration logic.
-Client-specific setup (`OpenClaw`, `Cursor`, `Claude Desktop`, `Codex`, `Claude Code`) remains inside each skill repo.
+Client-specific setup (`OpenClaw`, `Cursor`, `Claude Desktop`, `IronClaw`, `Codex`, `Claude Code`) remains inside each skill repo.
 AI agents: jump to [AI Navigation](#ai-navigation) for routing and execution guides.
 
 ## Prerequisites
@@ -120,9 +120,9 @@ Main fields per skill:
 3. `repository.https`
 4. `description`, `capabilities`
 5. `artifacts` (`skillMd`, `mcpServer`, `openclaw`)
-6. `setupCommands`
-7. `clientSupport`
-8. `dependsOn` (optional, schema `1.2.0`)
+6. `setupCommands` (for example `claudeDesktop`, `cursor`, `openclaw`, `ironclaw`)
+7. `clientSupport` (for example `claude_desktop`, `cursor`, `ironclaw`, `codex`)
+8. `dependsOn` (optional, schema `1.3.0`)
 
 Schema references:
 1. `docs/schemas/workspace.schema.json`
@@ -131,7 +131,7 @@ Schema references:
 4. `docs/schemas/skills-catalog.schema.json`
 
 Schema evolution policy:
-1. `patch` (`1.2.x`): wording/docs fixes, no field semantics change.
+1. `patch` (`1.3.x`): wording/docs fixes, no field semantics change.
 2. `minor` (`1.x.0`): backward-compatible field additions.
 3. `major` (`x.0.0`): breaking changes only.
 
@@ -153,7 +153,7 @@ This section is auto-synced by `bun run catalog:generate`.
 | aelfscan-skill | @aelfscan/agent-skills | 0.2.2 | 61 | AelfScan explorer data retrieval and analytics skill for agents. |
 | awaken-agent-skills | @awaken-finance/agent-kit | 1.2.4 | 11 | Awaken DEX trading and market data operations for agents. |
 | eforest-agent-skills | @eforest-finance/agent-skills | 0.4.3 | 48 | eForest symbol and forest NFT operations for agent workflows. |
-| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.5 | 28 | Portkey CA wallet registration/auth/guardian/transfer operations for agents. |
+| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.6 | 28 | Portkey CA wallet registration/auth/guardian/transfer operations for agents. |
 | portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.4 | 21 | Portkey EOA wallet and asset operations for aelf agents. |
 | tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.4 | 41 | TomorrowDAO governance, BP, and resource operations for agents. |
 <!-- SKILL_TABLE_END -->

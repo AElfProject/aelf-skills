@@ -1,6 +1,6 @@
 中文 | [English](CATALOG_SCHEMA.md)
 
-# Catalog Schema 语义说明（v1.2.0）
+# Catalog Schema 语义说明（v1.3.0）
 
 本文档定义 `skills-catalog.json` 的字段语义，供 AI 与开发者统一理解。
 
@@ -8,7 +8,7 @@
 
 ```json
 {
-  "schemaVersion": "1.2.0",
+  "schemaVersion": "1.3.0",
   "generatedAt": "ISO-8601",
   "source": "workspace.json",
   "skills": [],
@@ -17,7 +17,7 @@
 ```
 
 字段说明：
-1. `schemaVersion`：schema 版本。当前为 `1.2.0`。
+1. `schemaVersion`：schema 版本。当前为 `1.3.0`。
 2. `generatedAt`：生成时间（UTC ISO 字符串）。
 3. `source`：catalog 的输入来源文件名。
 4. `skills`：技能数组。
@@ -34,8 +34,8 @@
 6. `description_zh`：可选中文描述。中文界面优先使用，缺失时回退 `description`。
 7. `capabilities`：能力短句列表（用于 intent 匹配）。
 8. `artifacts`：能力产物存在性布尔值。
-9. `setupCommands`：推荐 setup 命令映射。
-10. `clientSupport`：客户端支持级别矩阵。
+9. `setupCommands`：推荐 setup 命令映射，可包含 `ironclaw`。
+10. `clientSupport`：客户端支持级别矩阵，包含 `ironclaw`。
 11. `openclawToolCount`：OpenClaw 工具数量。
 12. `dependsOn`：可选直接依赖 skill id 列表，用于编排顺序与组合执行。
 13. `sourcePath`：仅本地模式可选字段，公开 catalog 默认不含。
@@ -91,7 +91,7 @@
 - 输出：`skills-catalog.local.json`
 - 特点：包含 `sourcePath`，仅适用于本机环境。
 
-3. 迁移说明（1.1.1 -> 1.2.0）
-- 新增可选字段 `dependsOn`，用于表达 skill 之间的直接依赖。
-- `description_zh`（`1.1.1` 引入）继续保留并受支持。
+3. 迁移说明（1.2.0 -> 1.3.0）
+- 新增 `setupCommands.ironclaw`，用于表达 trusted skill setup 命令。
+- 新增 `clientSupport.ironclaw`，用于表达 IronClaw 支持级别。
 - 旧消费者如暂不使用新增字段，需按“忽略未知字段”兼容读取。

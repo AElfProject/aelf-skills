@@ -71,9 +71,10 @@ Execution flow:
 - `docs/schemas/skill-frontmatter.schema.json`
 - `docs/schemas/openclaw.schema.json`
 - `docs/schemas/skills-catalog.schema.json`
-3. Add new path to `workspace.json` with `${SKILLS_BASE}` placeholder.
-4. If dependency exists, add direct `dependsOn` entries.
-5. Run gates in order:
+3. If the skill supports MCP + setup, ensure catalog metadata exposes `setupCommands.ironclaw` and `clientSupport.ironclaw`.
+4. Add new path to `workspace.json` with `${SKILLS_BASE}` placeholder.
+5. If dependency exists, add direct `dependsOn` entries.
+6. Run gates in order:
 ```bash
 bun run catalog:generate
 bun run health:check
@@ -81,10 +82,10 @@ bun run readme:check
 bun run security:audit
 ./bootstrap.sh --only <skill-id> --skip-install
 ```
-6. Prepare PR body with the 6 fixed sections from AI contract.
+7. Prepare PR body with the 6 fixed sections from AI contract.
 
 Success criteria:
-1. Catalog generation passes with schema `1.2.0`.
+1. Catalog generation passes with schema `1.3.0`.
 2. No gate failure (`health/readme/security/bootstrap`).
 3. PR description contains Goal/Non-goal, key files, contract mapping, validation outputs, risk, rollback.
 

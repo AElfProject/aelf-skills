@@ -96,7 +96,7 @@ export function buildCatalog(options: BuildCatalogOptions = {}): SkillsCatalog {
   skills.sort((a, b) => a.id.localeCompare(b.id));
 
   return {
-    schemaVersion: '1.2.0',
+    schemaVersion: '1.3.0',
     generatedAt: new Date().toISOString(),
     source: path.basename(workspacePath),
     skills,
@@ -311,6 +311,7 @@ function buildSetupCommands(setupBase?: string) {
     openclaw: `${setupBase} openclaw`,
     cursor: `${setupBase} cursor`,
     claudeDesktop: `${setupBase} claude`,
+    ironclaw: `${setupBase} ironclaw`,
   };
 }
 
@@ -328,6 +329,7 @@ function buildClientSupport(input: {
     openclaw,
     cursor: input.hasMcp ? nativeMcp : 'unsupported',
     claude_desktop: input.hasMcp ? nativeMcp : 'unsupported',
+    ironclaw: input.hasMcp ? nativeMcp : 'unsupported',
     claude_code: input.hasMcp ? 'manual-mcp' : 'unsupported',
     codex: input.hasMcp || input.hasCli ? 'manual-cli-or-mcp' : 'unsupported',
   };

@@ -17,6 +17,7 @@
 - [ ] MCP 支持存在：`src/mcp/server.ts` 或 `scripts.mcp`。
 - [ ] 若声明 OpenClaw native，`openclaw.json` 存在。
 - [ ] 若声明 native-setup，存在 `scripts.setup` 或 `bin/setup.ts|bin/setup.js`。
+- [ ] 若声明 IronClaw native setup，必须支持 `setup ironclaw` 且安装到 trusted skill 路径。
 
 ## 3. Schema 一致性
 

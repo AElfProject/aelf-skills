@@ -49,13 +49,15 @@ AI output `MUST NOT` stop at high-level suggestions without concrete files and c
 2. Target skill repository
 - `MUST` include `package.json` with `name` and `version`.
 - `MUST` include `SKILL.md` front matter with `name` and `description`.
+- `SHOULD` include `version` and `activation.*` fields when the skill supports IronClaw routing.
 - `MUST` satisfy `docs/schemas/skill-frontmatter.schema.json`.
 - `MUST` provide MCP support: `src/mcp/server.ts` or `scripts.mcp`.
 - If OpenClaw native is declared, `MUST` include `openclaw.json` and satisfy `docs/schemas/openclaw.schema.json`.
 - If native setup is declared, `MUST` include `scripts.setup` or `bin/setup.ts|bin/setup.js`.
+- If IronClaw native setup is declared, setup must support `bun run setup ironclaw` (or equivalent `bin/setup.ts ironclaw`).
 
 3. Generated catalog
-- `MUST` produce schema version `1.2.0`.
+- `MUST` produce schema version `1.3.0`.
 - `MUST` satisfy `docs/schemas/skills-catalog.schema.json`.
 - `MUST` include `dependsOn` in catalog when declared in workspace.
 
@@ -117,7 +119,7 @@ Optional full install validation:
 ## 10. Definition of Done
 
 Done means all conditions below are met:
-1. New skill appears in `skills-catalog.json` (schema `1.2.0`).
+1. New skill appears in `skills-catalog.json` (schema `1.3.0`).
 2. `health:check` has no fail.
 3. `readme:check` passes.
 4. `security:audit` passes.

@@ -19,6 +19,7 @@
 - Capability boundary:
   - MCP: <YES/NO>
   - OpenClaw native: <YES/NO>
+  - IronClaw native setup: <YES/NO>
   - CLI: <YES/NO>
 - Install-level validation allowed: <YES/NO>
 
@@ -27,10 +28,10 @@
 - 如有依赖，声明直接依赖 `dependsOn`。
 - 确保 skill 仓最小产物：
   - `package.json` name/version
-  - `SKILL.md` front matter name/description
+  - `SKILL.md` front matter name/description（如适用，再加 `version` 与 `activation.*`）
   - MCP 支持（`src/mcp/server.ts` 或 `scripts.mcp`）
   - 声明 OpenClaw native 时需要 `openclaw.json`
-  - setup 支持（`scripts.setup` 或 `bin/setup.ts|bin/setup.js`）
+  - setup 支持（`scripts.setup` 或 `bin/setup.ts|bin/setup.js`）；若声明 IronClaw native setup，还需支持 `setup ironclaw`
 - 重新生成 catalog 与 README 快照。
 
 ### 3) Schema references (MUST)
