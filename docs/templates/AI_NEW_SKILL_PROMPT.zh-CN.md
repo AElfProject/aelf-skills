@@ -19,6 +19,7 @@
 - Capability boundary:
   - MCP: <YES/NO>
   - OpenClaw native: <YES/NO>
+  - IronClaw native setup: <YES/NO>
   - CLI: <YES/NO>
 - Install-level validation allowed: <YES/NO>
 
@@ -27,10 +28,12 @@
 - 如有依赖，声明直接依赖 `dependsOn`。
 - 确保 skill 仓最小产物：
   - `package.json` name/version
-  - `SKILL.md` front matter name/description
+  - `package.json bin` 中有稳定的 setup 可执行入口
+  - `SKILL.md` front matter name/description（如适用，再加 `version` 与 `activation.*`）
   - MCP 支持（`src/mcp/server.ts` 或 `scripts.mcp`）
   - 声明 OpenClaw native 时需要 `openclaw.json`
-  - setup 支持（`scripts.setup` 或 `bin/setup.ts|bin/setup.js`）
+  - setup 支持（`scripts.setup` 或 `bin/setup.ts|bin/setup.js`）；若声明 IronClaw native setup，还需支持 `setup ironclaw`
+  - README / SKILL 明确 GitHub 只负责 discovery，activation 走 npm/ClawHub 契约
 - 重新生成 catalog 与 README 快照。
 
 ### 3) Schema references (MUST)
@@ -64,6 +67,7 @@ bun run security:audit
 ### 6) Prohibited actions
 - 不得跳过 `workspace.json`。
 - 不得声明能力却缺少产物。
+- 不得把 GitHub tree URL 当作 OpenClaw/IronClaw 的最终安装输入。
 - 不得隐藏失败命令输出。
 - 不得忽略 `[FAIL]` 输出。
 - 若规则/契约/模板有变更，必须同步更新中英文文档。

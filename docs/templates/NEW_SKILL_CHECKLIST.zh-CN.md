@@ -13,10 +13,12 @@
 ## 2. 最低产物（MUST）
 
 - [ ] `package.json` 存在且含 `name`、`version`。
+- [ ] `package.json bin` 暴露稳定的 setup 可执行入口（`bin/setup.js|bin/setup.ts`）。
 - [ ] `SKILL.md` 存在且 front matter 含 `name`、`description`。
 - [ ] MCP 支持存在：`src/mcp/server.ts` 或 `scripts.mcp`。
 - [ ] 若声明 OpenClaw native，`openclaw.json` 存在。
 - [ ] 若声明 native-setup，存在 `scripts.setup` 或 `bin/setup.ts|bin/setup.js`。
+- [ ] 若声明 IronClaw native setup，必须支持 `setup ironclaw` 且安装到 trusted skill 路径。
 
 ## 3. Schema 一致性
 
@@ -24,6 +26,7 @@
 - [ ] `SKILL.md` front matter 满足 `docs/schemas/skill-frontmatter.schema.json`。
 - [ ] `openclaw.json`（若存在）满足 `docs/schemas/openclaw.schema.json`。
 - [ ] 生成后的 `skills-catalog.json` 满足 `docs/schemas/skills-catalog.schema.json`。
+- [ ] 生成后的 catalog 包含 `distributionSources` 与 `clientInstall`。
 
 ## 4. 架构与产品要求
 

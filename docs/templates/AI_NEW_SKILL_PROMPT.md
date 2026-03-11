@@ -19,6 +19,7 @@ Follow `docs/AI_SKILL_CONTRACT.md` strictly.
 - Capability boundary:
   - MCP: <YES/NO>
   - OpenClaw native: <YES/NO>
+  - IronClaw native setup: <YES/NO>
   - CLI: <YES/NO>
 - Install-level validation allowed: <YES/NO>
 
@@ -27,10 +28,12 @@ Follow `docs/AI_SKILL_CONTRACT.md` strictly.
 - If needed, declare direct dependencies via `dependsOn`.
 - Ensure minimum artifacts in skill repo:
   - `package.json` name/version
-  - `SKILL.md` front matter name/description
+  - `package.json bin` with a stable setup executable
+  - `SKILL.md` front matter name/description (and `version` + `activation.*` for IronClaw when applicable)
   - MCP support (`src/mcp/server.ts` or `scripts.mcp`)
   - `openclaw.json` if OpenClaw native is declared
-  - setup support (`scripts.setup` or `bin/setup.ts|bin/setup.js`)
+  - setup support (`scripts.setup` or `bin/setup.ts|bin/setup.js`), including `setup ironclaw` when IronClaw native setup is declared
+  - README / SKILL distribution wording: GitHub discovery only, activation via npm/ClawHub contract
 - Regenerate catalog and README snapshots.
 
 ### 3) Schema references (MUST)
@@ -64,6 +67,7 @@ If install-level validation is allowed, also run:
 ### 6) Prohibited actions
 - Do not skip `workspace.json`.
 - Do not declare capability without required artifact.
+- Do not treat GitHub tree URLs as final OpenClaw/IronClaw install inputs.
 - Do not hide failed commands.
 - Do not ignore `[FAIL]` outputs.
 - If rules/contracts/templates are updated, update Chinese and English docs together.

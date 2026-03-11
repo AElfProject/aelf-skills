@@ -90,7 +90,7 @@ describe('update-check live flow', () => {
         catalogPath,
         JSON.stringify(
           {
-            schemaVersion: '1.2.0',
+            schemaVersion: '1.3.0',
             generatedAt: '2026-03-05T00:00:00.000Z',
             source: 'test',
             warnings: [],
@@ -119,6 +119,7 @@ describe('update-check live flow', () => {
                   openclaw: 'native',
                   cursor: 'native-setup',
                   claude_desktop: 'native-setup',
+                  ironclaw: 'native-setup',
                   claude_code: 'manual',
                   codex: 'manual',
                 },
@@ -250,7 +251,7 @@ describe('update-check live flow', () => {
         catalogPath,
         JSON.stringify(
           {
-            schemaVersion: '1.2.0',
+            schemaVersion: '1.3.0',
             generatedAt: '2026-03-05T00:00:00.000Z',
             source: 'test',
             warnings: [],
@@ -268,6 +269,7 @@ describe('update-check live flow', () => {
                   openclaw: 'native',
                   cursor: 'native-setup',
                   claude_desktop: 'native-setup',
+                  ironclaw: 'native-setup',
                   claude_code: 'manual',
                   codex: 'manual',
                 },
@@ -286,6 +288,7 @@ describe('update-check live flow', () => {
                   openclaw: 'native',
                   cursor: 'native-setup',
                   claude_desktop: 'native-setup',
+                  ironclaw: 'native-setup',
                   claude_code: 'manual',
                   codex: 'manual',
                 },

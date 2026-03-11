@@ -20,7 +20,7 @@
 然后执行：
 1) ./bootstrap.sh --source github --dest ./downloaded-skills
 2) bun run health:check -- --skills-root ./downloaded-skills
-3) for d in ./downloaded-skills/*; do [ -f "$d/package.json" ] || continue; (cd "$d" && bun run setup openclaw) || echo "[WARN] $(basename "$d") setup openclaw failed"; done
+3) 读取 `skills-catalog.json` 里的 `clientInstall.openclaw` / `clientInstall.ironclaw`；若存在 `installCommand`，由宿主或 agent 在本地执行，而不是把 GitHub tree URL 当成最终安装输入
 路由规则：按 SKILL_ROUTING_MATRIX；若有歧义，输出 Recommended/Alternative/Reason。
 失败规则：按 docs/AI_E2E_SCENARIOS.zh-CN.md 的常见错误恢复模板执行。
 ```
@@ -30,8 +30,19 @@
 本入口仓只负责 **发现、下载、安装、能力索引**。
 
 不会替代各 skill 仓内部客户端接入逻辑。
-`OpenClaw`、`Cursor`、`Claude Desktop`、`Codex`、`Claude Code` 的具体接入仍由各 skill 仓负责。
+`OpenClaw`、`Cursor`、`Claude Desktop`、`IronClaw`、`Codex`、`Claude Code` 的具体接入仍由各 skill 仓负责。
 AI Agent 可直接跳转到 [AI 导航入口](#ai-导航入口) 查看路由与执行指引。
+
+## Discovery 与 Activation
+
+Skill 分发一律拆成两个阶段：
+1. `discovery`：GitHub repo URL / npm package / ClawHub slug 负责让宿主发现 skill。
+2. `activation`：宿主或 agent 读取 `skills-catalog.json` 中的机器契约并执行安装命令。
+
+固定规则：
+1. GitHub tree/repo URL 只用于 discovery，不是 IronClaw 的最终安装载体。
+2. IronClaw 一律优先读取 `clientInstall.ironclaw.installCommand`，并预期存在 trusted 本地安装步骤。
+3. OpenClaw 若存在 `distributionSources.clawhubId`，优先走 `ClawHub` / managed install；否则回退到 `clientInstall.openclaw.installCommand`。
 
 ## 环境依赖
 
@@ -118,11 +129,13 @@ bun run update:check
 1. `id`, `displayName`
 2. `npm`（`name`, `version`）
 3. `repository.https`
-4. `description`, `capabilities`
-5. `artifacts`（`skillMd`, `mcpServer`, `openclaw`）
-6. `setupCommands`
-7. `clientSupport`
-8. `dependsOn`（可选，schema `1.2.0`）
+4. `distributionSources`（`githubRepo`, `npmPackage`，以及可选 `clawhubId`）
+5. `description`, `capabilities`
+6. `artifacts`（`skillMd`, `mcpServer`, `openclaw`）
+7. `setupCommands`（兼容展示字段，例如 `claudeDesktop`、`cursor`、`openclaw`、`ironclaw`）
+8. `clientSupport`（支持矩阵，例如 `claude_desktop`、`cursor`、`ironclaw`、`codex`）
+9. `clientInstall`（`openclaw` / `ironclaw` 的机器可执行安装契约）
+10. `dependsOn`（可选，schema `1.3.0`）
 
 Schema 参考：
 1. `docs/schemas/workspace.schema.json`
@@ -131,7 +144,7 @@ Schema 参考：
 4. `docs/schemas/skills-catalog.schema.json`
 
 Schema 演进规则：
-1. `patch`（`1.2.x`）：文案/文档修订，不改变字段语义。
+1. `patch`（`1.3.x`）：文案/文档修订，不改变字段语义。
 2. `minor`（`1.x.0`）：向后兼容的字段新增。
 3. `major`（`x.0.0`）：仅用于破坏性变更。
 
@@ -153,7 +166,7 @@ Schema 演进规则：
 | aelfscan-skill | @aelfscan/agent-skills | 0.2.2 | 61 | AelfScan 浏览器数据检索与分析技能。 |
 | awaken-agent-skills | @awaken-finance/agent-kit | 1.2.4 | 11 | Awaken DEX 交易与行情数据技能。 |
 | eforest-agent-skills | @eforest-finance/agent-skills | 0.4.3 | 48 | eForest 代币与 NFT 市场操作技能。 |
-| portkey-ca-agent-skills | @portkey/ca-agent-skills | 1.1.5 | 28 | Portkey CA 钱包注册、认证、Guardian 与转账技能。 |
+| portkey-ca-agent-skills | @portkey/ca-agent-skills | 2.0.0 | 28 | Portkey CA 钱包注册、认证、Guardian 与转账技能。 |
 | portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.4 | 21 | Portkey EOA 钱包与资产操作技能。 |
 | tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.4 | 41 | TomorrowDAO 治理、BP 与资源操作技能。 |
 <!-- SKILL_TABLE_END -->

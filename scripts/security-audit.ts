@@ -55,6 +55,24 @@ function collectIssues(catalog: SkillsCatalog): SecurityIssue[] {
         }
       }
     }
+
+    const installEntries = Object.entries(skill.clientInstall || {})
+      .map(([field, config]) => [field, config?.installCommand] as const)
+      .filter(([, command]): command is string => typeof command === 'string' && command.length > 0);
+
+    for (const [field, command] of installEntries) {
+      for (const pattern of RISK_PATTERNS) {
+        if (pattern.regex.test(command)) {
+          issues.push({
+            skillId: skill.id,
+            field: `clientInstall.${field}.installCommand`,
+            command,
+            rule: pattern.name,
+          });
+          break;
+        }
+      }
+    }
   }
 
   return issues;

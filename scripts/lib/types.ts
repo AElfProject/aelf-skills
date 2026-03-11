@@ -12,6 +12,33 @@ export interface SkillSetupCommands {
   openclaw?: string;
   cursor?: string;
   claudeDesktop?: string;
+  ironclaw?: string;
+}
+
+export interface SkillDistributionSources {
+  githubRepo?: string;
+  npmPackage?: string;
+  clawhubId?: string;
+}
+
+export type ClientInstallSource = 'clawhub' | 'npm' | 'none';
+
+export type ClientInstallMode =
+  | 'managed-install'
+  | 'package-setup'
+  | 'trusted-local-install'
+  | 'unsupported';
+
+export interface SkillClientInstallEntry {
+  source: ClientInstallSource;
+  mode: ClientInstallMode;
+  installCommand?: string;
+  requiresTrustPromotion?: boolean;
+}
+
+export interface SkillClientInstall {
+  openclaw: SkillClientInstallEntry;
+  ironclaw: SkillClientInstallEntry;
 }
 
 export interface SkillArtifacts {
@@ -24,6 +51,7 @@ export interface SkillClientSupport {
   openclaw: ClientSupportLevel;
   cursor: ClientSupportLevel;
   claude_desktop: ClientSupportLevel;
+  ironclaw: ClientSupportLevel;
   claude_code: ClientSupportLevel;
   codex: ClientSupportLevel;
 }
@@ -42,19 +70,21 @@ export interface SkillCatalogEntry {
   displayName: string;
   npm: SkillNpm;
   repository: SkillRepository;
+  distributionSources: SkillDistributionSources;
   description: string;
   description_zh?: string;
   capabilities: string[];
   artifacts: SkillArtifacts;
   setupCommands: SkillSetupCommands;
   clientSupport: SkillClientSupport;
+  clientInstall: SkillClientInstall;
   openclawToolCount: number;
   dependsOn?: string[];
   sourcePath?: string;
 }
 
 export interface SkillsCatalog {
-  schemaVersion: '1.2.0';
+  schemaVersion: '1.3.0';
   generatedAt: string;
   source: string;
   skills: SkillCatalogEntry[];
