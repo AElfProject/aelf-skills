@@ -55,14 +55,15 @@ AI output `MUST NOT` stop at high-level suggestions without concrete files and c
 - `MUST` provide MCP support: `src/mcp/server.ts` or `scripts.mcp`.
 - If OpenClaw native is declared, `MUST` include `openclaw.json` and satisfy `docs/schemas/openclaw.schema.json`.
 - If native setup is declared, `MUST` include `scripts.setup` or `bin/setup.ts|bin/setup.js`.
-- If IronClaw native setup is declared, setup must support `bun run setup ironclaw` (or equivalent `bin/setup.ts ironclaw`).
+- If native IronClaw delivery is declared, the repo should expose an `ironclaw-wasm/` sidecar plus GitHub Release artifacts and metadata in `ironclawNative`.
 - GitHub repo/tree URLs are discovery sources only; final activation for OpenClaw/IronClaw `MUST` be expressible through catalog metadata.
 
 3. Generated catalog
-- `MUST` produce schema version `1.3.0`.
+- `MUST` produce schema version `1.4.0`.
 - `MUST` satisfy `docs/schemas/skills-catalog.schema.json`.
 - `MUST` include `dependsOn` in catalog when declared in workspace.
 - `MUST` emit `distributionSources` and `clientInstall` for published/installable skills.
+- If native IronClaw delivery exists, `MUST` also emit `artifacts.ironclawWasm` and `ironclawNative`.
 
 4. Documentation synchronization
 - If rule/contract/template changed, AI `MUST` update Chinese and English docs together.
@@ -112,7 +113,7 @@ Optional full install validation:
 | Pattern | Cause | Repair |
 |---|---|---|
 | `[WARN] ... SKILL.md not found, project skipped` | Skill markdown missing | Add `SKILL.md` with valid front matter |
-| `declared native-setup but setup command not available` | Missing setup entry | Add `scripts.setup` or `bin/setup.ts/js` |
+| `ironclaw support must be native or unsupported in wasm-only rollout` | Invalid IronClaw support mode | Emit `clientSupport.ironclaw` as `native` or `unsupported` only |
 | `declared openclaw native but openclaw.json missing` | Missing OpenClaw config | Add `openclaw.json` |
 | `[FAIL] Duplicate skill id detected:` | Conflicting skill ids | Fix front matter `name`/workspace mapping |
 | `[FAIL] <id>: dependsOn references unknown skill id` | Invalid dependency id | Fix `dependsOn` |
@@ -122,7 +123,7 @@ Optional full install validation:
 ## 10. Definition of Done
 
 Done means all conditions below are met:
-1. New skill appears in `skills-catalog.json` (schema `1.3.0`).
+1. New skill appears in `skills-catalog.json` (schema `1.4.0`).
 2. `health:check` has no fail.
 3. `readme:check` passes.
 4. `security:audit` passes.

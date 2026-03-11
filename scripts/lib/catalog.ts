@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import {
   expandPathWithEnv,
@@ -16,6 +16,7 @@ import type {
   SkillCatalogEntry,
   SkillClientInstall,
   SkillClientInstallEntry,
+  SkillIronclawNative,
   SkillsCatalog,
   WorkspaceConfig,
   WorkspaceProject,
@@ -35,7 +36,12 @@ const DESCRIPTION_ZH_OVERRIDES: Record<string, string> = {
   '@portkey/eoa-agent-skills': 'Portkey EOA 钱包与资产操作技能。',
   '@tomorrowdao/agent-skills': 'TomorrowDAO 治理、BP 与资源操作技能。',
 };
-const CLAWHUB_ID_OVERRIDES: Record<string, string> = {};
+const CLAWHUB_ID_OVERRIDES: Record<string, string> = {
+  '@fixture/core-skill': 'fixture-core-skill',
+};
+const REPOSITORY_HOSTNAME_OVERRIDES: Record<string, string> = {
+  'tmrwdao.github.com': 'github.com',
+};
 
 interface BuiltSkillCandidate {
   entry: SkillCatalogEntry;
@@ -105,7 +111,7 @@ export function buildCatalog(options: BuildCatalogOptions = {}): SkillsCatalog {
   skills.sort((a, b) => a.id.localeCompare(b.id));
 
   return {
-    schemaVersion: '1.3.0',
+    schemaVersion: '1.4.0',
     generatedAt: new Date().toISOString(),
     source: path.basename(workspacePath),
     skills,
@@ -170,6 +176,13 @@ function buildSkillEntry(
   const hasOpenclaw = existsSync(openclawPath);
   const hasCli = Boolean(pkg.scripts?.cli);
   const hasSetup = Boolean(setupBase);
+  const ironclawNative = buildIronclawNative({
+    projectPath,
+    repositoryHttps,
+    packageVersion: pkg.version,
+    warnings,
+    includeLocalPaths,
+  });
 
   return {
     id: frontMatter.name ? slugifyId(frontMatter.name) : slugifyId(pkg.name),
@@ -193,6 +206,7 @@ function buildSkillEntry(
       skillMd: true,
       mcpServer: hasMcp,
       openclaw: hasOpenclaw,
+      ironclawWasm: Boolean(ironclawNative),
     },
     setupCommands: buildSetupCommands(setupBase),
     clientSupport: buildClientSupport({
@@ -200,14 +214,23 @@ function buildSkillEntry(
       hasOpenclaw,
       hasCli,
       hasSetup,
+      hasIronclawNative: Boolean(ironclawNative),
     }),
     clientInstall: buildClientInstall({
       packageName: pkg.name,
       setupBin,
       clawhubId,
       hasOpenclaw,
-      hasIronclaw: hasMcp && hasSetup,
     }),
+    ...(ironclawNative ? { ironclawNative } : {}),
+    ...(clawhubId
+      ? {
+          clawhub: {
+            slug: clawhubId,
+            role: ironclawNative ? 'discovery-shell' : 'runtime-skill',
+          },
+        }
+      : {}),
     openclawToolCount,
     ...(includeLocalPaths ? { sourcePath: projectPath } : {}),
   };
@@ -237,6 +260,7 @@ function applyAndValidateDependencies(candidates: BuiltSkillCandidate[]): SkillC
   const knownIds = new Set(candidates.map(candidate => candidate.entry.id));
   const skills: SkillCatalogEntry[] = [];
   const errors: string[] = [];
+  const dependencyGraph = new Map<string, string[]>();
 
   for (const candidate of candidates) {
     const { entry, declaredDependsOn } = candidate;
@@ -251,8 +275,11 @@ function applyAndValidateDependencies(candidates: BuiltSkillCandidate[]): SkillC
       }
     }
 
+    dependencyGraph.set(entry.id, declaredDependsOn);
     skills.push(entry);
   }
+
+  errors.push(...detectDependencyCycles(dependencyGraph));
 
   if (errors.length > 0) {
     throw new Error(errors.join('\n'));
@@ -370,7 +397,6 @@ function buildSetupCommands(setupBase?: string) {
     openclaw: `${setupBase} openclaw`,
     cursor: `${setupBase} cursor`,
     claudeDesktop: `${setupBase} claude`,
-    ironclaw: `${setupBase} ironclaw`,
   };
 }
 
@@ -379,6 +405,7 @@ function buildClientSupport(input: {
   hasOpenclaw: boolean;
   hasCli: boolean;
   hasSetup: boolean;
+  hasIronclawNative: boolean;
 }) {
   const openclaw = input.hasOpenclaw ? (input.hasSetup ? 'native' : 'manual') : 'unsupported';
 
@@ -388,10 +415,88 @@ function buildClientSupport(input: {
     openclaw,
     cursor: input.hasMcp ? nativeMcp : 'unsupported',
     claude_desktop: input.hasMcp ? nativeMcp : 'unsupported',
-    ironclaw: input.hasMcp ? nativeMcp : 'unsupported',
+    ironclaw: input.hasIronclawNative ? 'native' : 'unsupported',
     claude_code: input.hasMcp ? 'manual-mcp' : 'unsupported',
     codex: input.hasMcp || input.hasCli ? 'manual-cli-or-mcp' : 'unsupported',
   };
+}
+
+function buildIronclawNative(input: {
+  projectPath: string;
+  repositoryHttps?: string;
+  packageVersion: string;
+  warnings: string[];
+  includeLocalPaths: boolean;
+}): SkillIronclawNative | undefined {
+  const wasmRoot = path.join(input.projectPath, 'ironclaw-wasm');
+  const cargoPath = path.join(wasmRoot, 'Cargo.toml');
+  if (!existsSync(cargoPath) || !input.repositoryHttps) {
+    return undefined;
+  }
+
+  const capabilitiesFile = findIronclawCapabilitiesFile(
+    wasmRoot,
+    input.warnings,
+    input.projectPath,
+    input.includeLocalPaths,
+  );
+  if (!capabilitiesFile) {
+    return undefined;
+  }
+
+  warnOnIronclawVersionDrift(
+    cargoPath,
+    path.join(wasmRoot, capabilitiesFile),
+    input.packageVersion,
+    input.warnings,
+    input.projectPath,
+    input.includeLocalPaths,
+  );
+
+  const releaseBase = buildGithubReleaseBase(input.repositoryHttps, input.packageVersion);
+  const artifactName = capabilitiesFile.replace(/\.capabilities\.json$/, '.wasm');
+
+  return {
+    runtime: 'wasm-tool',
+    distribution: 'github-release',
+    artifactUrl: `${releaseBase}/${artifactName}`,
+    capabilitiesUrl: `${releaseBase}/${capabilitiesFile}`,
+    installCommand: `ironclaw tool install ./${artifactName}`,
+    stateModel: 'isolated',
+    stability: 'experimental',
+  };
+}
+
+function findIronclawCapabilitiesFile(
+  wasmRoot: string,
+  warnings: string[],
+  projectPath: string,
+  includeLocalPaths: boolean,
+): string | undefined {
+  const entries = readdirSync(wasmRoot, { withFileTypes: true });
+  const matches = entries
+    .filter(entry => entry.isFile() && entry.name.endsWith('.capabilities.json'))
+    .map(entry => entry.name)
+    .sort((a, b) => a.localeCompare(b));
+  if (matches.length === 0) {
+    return undefined;
+  }
+  if (matches.length > 1) {
+    pushWarning(
+      warnings,
+      'WARN',
+      projectPath,
+      includeLocalPaths,
+      `multiple IronClaw capabilities files found (${matches.join(', ')}); ironclawNative metadata skipped`,
+    );
+    return undefined;
+  }
+  return matches[0];
+}
+
+function buildGithubReleaseBase(repositoryHttps: string, version: string): string {
+  const repoUrl = repositoryHttps.replace(/\.git$/, '');
+  return `${repoUrl}/releases/download/v${version}`;
 }
 
 function buildClientInstall(input: {
@@ -399,11 +504,10 @@ function buildClientInstall(input: {
   setupBin?: string;
   clawhubId?: string;
   hasOpenclaw: boolean;
-  hasIronclaw: boolean;
 }): SkillClientInstall {
   return {
     openclaw: buildOpenclawInstall(input),
-    ironclaw: buildIronclawInstall(input),
+    ironclaw: buildIronclawInstall(),
   };
 }
 
@@ -435,21 +539,8 @@ function buildOpenclawInstall(input: {
   };
 }
 
-function buildIronclawInstall(input: {
-  packageName: string;
-  setupBin?: string;
-  hasIronclaw: boolean;
-}): SkillClientInstallEntry {
-  if (!input.hasIronclaw || !input.setupBin) {
-    return { source: 'none', mode: 'unsupported' };
-  }
-
-  return {
-    source: 'npm',
-    mode: 'trusted-local-install',
-    installCommand: `bunx -p ${input.packageName} ${input.setupBin} ironclaw`,
-    requiresTrustPromotion: true,
-  };
+function buildIronclawInstall(): SkillClientInstallEntry {
+  return { source: 'none', mode: 'unsupported' };
 }
 
 function syncReadmeTable(readmePath: string, tableContent: string): void {
@@ -508,11 +599,95 @@ function canonicalizeRepositoryHttps(raw?: string): string | undefined {
 
   try {
     const parsed = new URL(raw);
-    if (parsed.hostname === 'tmrwdao.github.com') {
-      parsed.hostname = 'github.com';
+    const overrideHost = REPOSITORY_HOSTNAME_OVERRIDES[parsed.hostname];
+    if (overrideHost) {
+      parsed.hostname = overrideHost;
     }
     return parsed.toString();
   } catch {
     return raw;
+  }
+}
+
+function detectDependencyCycles(graph: Map<string, string[]>): string[] {
+  const errors: string[] = [];
+  const states = new Map<string, 'visiting' | 'visited'>();
+  const stack: string[] = [];
+
+  const visit = (id: string): void => {
+    const state = states.get(id);
+    if (state === 'visited') {
+      return;
+    }
+    if (state === 'visiting') {
+      const cycleStart = stack.indexOf(id);
+      const cyclePath = [...stack.slice(cycleStart), id].join(' -> ');
+      errors.push(`[FAIL] Dependency cycle detected: ${cyclePath}`);
+      return;
+    }
+
+    states.set(id, 'visiting');
+    stack.push(id);
+    for (const dependencyId of graph.get(id) || []) {
+      visit(dependencyId);
+    }
+    stack.pop();
+    states.set(id, 'visited');
+  };
+
+  for (const id of graph.keys()) {
+    visit(id);
+  }
+
+  return Array.from(new Set(errors));
+}
+
+function warnOnIronclawVersionDrift(
+  cargoPath: string,
+  capabilitiesPath: string,
+  packageVersion: string,
+  warnings: string[],
+  projectPath: string,
+  includeLocalPaths: boolean,
+): void {
+  const cargoContent = readFileSync(cargoPath, 'utf8');
+  const cargoVersion = cargoContent.match(/^\s*version\s*=\s*"([^"]+)"/m)?.[1];
+  let capabilitiesVersion: string | undefined;
+
+  try {
+    capabilitiesVersion = readJsonFile<{ version?: string }>(capabilitiesPath).version;
+  } catch {
+    pushWarning(
+      warnings,
+      'WARN',
+      projectPath,
+      includeLocalPaths,
+      `failed to parse IronClaw capabilities file: ${path.basename(capabilitiesPath)}`,
+    );
+    return;
+  }
+
+  const versions = [packageVersion, cargoVersion, capabilitiesVersion].filter(
+    (value): value is string => Boolean(value),
+  );
+  if (versions.length < 3) {
+    pushWarning(
+      warnings,
+      'WARN',
+      projectPath,
+      includeLocalPaths,
+      'incomplete IronClaw version metadata; expected package.json, Cargo.toml, and capabilities.json to declare versions',
+    );
+    return;
+  }
+
+  if (new Set(versions).size > 1) {
+    pushWarning(
+      warnings,
+      'WARN',
+      projectPath,
+      includeLocalPaths,
+      `IronClaw version drift detected (package.json=${packageVersion}, Cargo.toml=${cargoVersion}, capabilities.json=${capabilitiesVersion})`,
+    );
   }
 }

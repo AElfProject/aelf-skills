@@ -71,7 +71,8 @@
 - `docs/schemas/skill-frontmatter.schema.json`
 - `docs/schemas/openclaw.schema.json`
 - `docs/schemas/skills-catalog.schema.json`
-3. 若 skill 支持 MCP + setup，确保 catalog 输出 `setupCommands.ironclaw`、`clientSupport.ironclaw`、`distributionSources` 与 `clientInstall`。
+3. 确保 catalog 输出 `clientSupport.ironclaw`、`distributionSources` 与 `clientInstall`，并把 IronClaw activation 固定绑定到 `ironclawNative`。
+4. 若 skill 支持 IronClaw native WASM，还要确保 catalog 输出 `artifacts.ironclawWasm` 与 `ironclawNative`。
 4. 在 `workspace.json` 增加新路径，使用 `${SKILLS_BASE}` 占位。
 5. 如存在依赖，补充直接依赖 `dependsOn`。
 6. 按顺序执行门禁：
@@ -85,13 +86,14 @@ bun run security:audit
 7. 按契约固定 6 段格式整理 PR 描述。
 
 成功标准：
-1. catalog 成功生成且 schema 为 `1.3.0`。
+1. catalog 成功生成且 schema 为 `1.4.0`。
 2. `health/readme/security/bootstrap` 门禁全部通过。
 3. PR 描述包含 Goal/Non-goal、关键文件、契约映射、验证输出、风险与回滚。
 
 补充安装规则：
 1. GitHub repo URL 只用于 discovery。
-2. OpenClaw/IronClaw 执行时，优先读取 `clientInstall.*.installCommand`。
+2. OpenClaw 执行时，优先读取 `clientInstall.openclaw.installCommand`。
+3. IronClaw 执行时，只能走 `ironclawNative`；`clientInstall.ironclaw` 仅是兼容元数据，不能执行。
 
 ## 常见错误恢复模板
 

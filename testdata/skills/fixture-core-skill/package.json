@@ -2,6 +2,10 @@
   "name": "@fixture/core-skill",
   "version": "0.1.0",
   "description": "Fixture core skill for CI gates.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fixture/core-skill.git"
+  },
   "bin": {
     "fixture-core-setup": "./bin/setup.js"
   },

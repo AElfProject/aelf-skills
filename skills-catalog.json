@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "1.3.0",
-  "generatedAt": "2026-03-09T14:24:24.785Z",
+  "schemaVersion": "1.4.0",
+  "generatedAt": "2026-03-10T05:07:10.783Z",
   "source": "workspace.json",
   "skills": [
     {
@@ -29,21 +29,21 @@
       "artifacts": {
         "skillMd": true,
         "mcpServer": true,
-        "openclaw": true
+        "openclaw": true,
+        "ironclawWasm": false
       },
       "setupCommands": {
         "install": "bun install",
         "list": "bun run setup list",
         "openclaw": "bun run setup openclaw",
         "cursor": "bun run setup cursor",
-        "claudeDesktop": "bun run setup claude",
-        "ironclaw": "bun run setup ironclaw"
+        "claudeDesktop": "bun run setup claude"
       },
       "clientSupport": {
         "openclaw": "native",
         "cursor": "native-setup",
         "claude_desktop": "native-setup",
-        "ironclaw": "native-setup",
+        "ironclaw": "unsupported",
         "claude_code": "manual-mcp",
         "codex": "manual-cli-or-mcp"
       },
@@ -54,10 +54,8 @@
           "installCommand": "bunx -p @blockchain-forever/aelf-node-skill aelf-node-setup openclaw"
         },
         "ironclaw": {
-          "source": "npm",
-          "mode": "trusted-local-install",
-          "installCommand": "bunx -p @blockchain-forever/aelf-node-skill aelf-node-setup ironclaw",
-          "requiresTrustPromotion": true
+          "source": "none",
+          "mode": "unsupported"
         }
       },
       "openclawToolCount": 11
@@ -87,21 +85,21 @@
       "artifacts": {
         "skillMd": true,
         "mcpServer": true,
-        "openclaw": true
+        "openclaw": true,
+        "ironclawWasm": false
       },
       "setupCommands": {
         "install": "bun install",
         "list": "bun run setup list",
         "openclaw": "bun run setup openclaw",
         "cursor": "bun run setup cursor",
-        "claudeDesktop": "bun run setup claude",
-        "ironclaw": "bun run setup ironclaw"
+        "claudeDesktop": "bun run setup claude"
       },
       "clientSupport": {
         "openclaw": "native",
         "cursor": "native-setup",
         "claude_desktop": "native-setup",
-        "ironclaw": "native-setup",
+        "ironclaw": "unsupported",
         "claude_code": "manual-mcp",
         "codex": "manual-cli-or-mcp"
       },
@@ -112,10 +110,8 @@
           "installCommand": "bunx -p @aelfscan/agent-skills aelfscan-setup openclaw"
         },
         "ironclaw": {
-          "source": "npm",
-          "mode": "trusted-local-install",
-          "installCommand": "bunx -p @aelfscan/agent-skills aelfscan-setup ironclaw",
-          "requiresTrustPromotion": true
+          "source": "none",
+          "mode": "unsupported"
         }
       },
       "openclawToolCount": 61
@@ -146,21 +142,21 @@
       "artifacts": {
         "skillMd": true,
         "mcpServer": true,
-        "openclaw": true
+        "openclaw": true,
+        "ironclawWasm": false
       },
       "setupCommands": {
         "install": "bun install",
         "list": "bun run setup list",
         "openclaw": "bun run setup openclaw",
         "cursor": "bun run setup cursor",
-        "claudeDesktop": "bun run setup claude",
-        "ironclaw": "bun run setup ironclaw"
+        "claudeDesktop": "bun run setup claude"
       },
       "clientSupport": {
         "openclaw": "native",
         "cursor": "native-setup",
         "claude_desktop": "native-setup",
-        "ironclaw": "native-setup",
+        "ironclaw": "unsupported",
         "claude_code": "manual-mcp",
         "codex": "manual-cli-or-mcp"
       },
@@ -171,10 +167,8 @@
           "installCommand": "bunx -p @awaken-finance/agent-kit awaken-setup openclaw"
         },
         "ironclaw": {
-          "source": "npm",
-          "mode": "trusted-local-install",
-          "installCommand": "bunx -p @awaken-finance/agent-kit awaken-setup ironclaw",
-          "requiresTrustPromotion": true
+          "source": "none",
+          "mode": "unsupported"
         }
       },
       "openclawToolCount": 11
@@ -205,21 +199,21 @@
       "artifacts": {
         "skillMd": true,
         "mcpServer": true,
-        "openclaw": true
+        "openclaw": true,
+        "ironclawWasm": false
       },
       "setupCommands": {
         "install": "bun install",
         "list": "bun run setup list",
         "openclaw": "bun run setup openclaw",
         "cursor": "bun run setup cursor",
-        "claudeDesktop": "bun run setup claude",
-        "ironclaw": "bun run setup ironclaw"
+        "claudeDesktop": "bun run setup claude"
       },
       "clientSupport": {
         "openclaw": "native",
         "cursor": "native-setup",
         "claude_desktop": "native-setup",
-        "ironclaw": "native-setup",
+        "ironclaw": "unsupported",
         "claude_code": "manual-mcp",
         "codex": "manual-cli-or-mcp"
       },
@@ -230,10 +224,8 @@
           "installCommand": "bunx -p @eforest-finance/agent-skills eforest-setup openclaw"
         },
         "ironclaw": {
-          "source": "npm",
-          "mode": "trusted-local-install",
-          "installCommand": "bunx -p @eforest-finance/agent-skills eforest-setup ironclaw",
-          "requiresTrustPromotion": true
+          "source": "none",
+          "mode": "unsupported"
         }
       },
       "openclawToolCount": 48
@@ -264,21 +256,21 @@
       "artifacts": {
         "skillMd": true,
         "mcpServer": true,
-        "openclaw": true
+        "openclaw": true,
+        "ironclawWasm": false
       },
       "setupCommands": {
         "install": "bun install",
         "list": "bun run setup list",
         "openclaw": "bun run setup openclaw",
         "cursor": "bun run setup cursor",
-        "claudeDesktop": "bun run setup claude",
-        "ironclaw": "bun run setup ironclaw"
+        "claudeDesktop": "bun run setup claude"
       },
       "clientSupport": {
         "openclaw": "native",
         "cursor": "native-setup",
         "claude_desktop": "native-setup",
-        "ironclaw": "native-setup",
+        "ironclaw": "unsupported",
         "claude_code": "manual-mcp",
         "codex": "manual-cli-or-mcp"
       },
@@ -289,10 +281,8 @@
           "installCommand": "bunx -p @portkey/ca-agent-skills portkey-ca-setup openclaw"
         },
         "ironclaw": {
-          "source": "npm",
-          "mode": "trusted-local-install",
-          "installCommand": "bunx -p @portkey/ca-agent-skills portkey-ca-setup ironclaw",
-          "requiresTrustPromotion": true
+          "source": "none",
+          "mode": "unsupported"
         }
       },
       "openclawToolCount": 28
@@ -323,21 +313,21 @@
       "artifacts": {
         "skillMd": true,
         "mcpServer": true,
-        "openclaw": true
+        "openclaw": true,
+        "ironclawWasm": true
       },
       "setupCommands": {
         "install": "bun install",
         "list": "bun run setup list",
         "openclaw": "bun run setup openclaw",
         "cursor": "bun run setup cursor",
-        "claudeDesktop": "bun run setup claude",
-        "ironclaw": "bun run setup ironclaw"
+        "claudeDesktop": "bun run setup claude"
       },
       "clientSupport": {
         "openclaw": "native",
         "cursor": "native-setup",
         "claude_desktop": "native-setup",
-        "ironclaw": "native-setup",
+        "ironclaw": "native",
         "claude_code": "manual-mcp",
         "codex": "manual-cli-or-mcp"
       },
@@ -348,11 +338,18 @@
           "installCommand": "bunx -p @portkey/eoa-agent-skills portkey-setup openclaw"
         },
         "ironclaw": {
-          "source": "npm",
-          "mode": "trusted-local-install",
-          "installCommand": "bunx -p @portkey/eoa-agent-skills portkey-setup ironclaw",
-          "requiresTrustPromotion": true
+          "source": "none",
+          "mode": "unsupported"
         }
+      },
+      "ironclawNative": {
+        "runtime": "wasm-tool",
+        "distribution": "github-release",
+        "artifactUrl": "https://github.com/Portkey-Wallet/eoa-agent-skills/releases/download/v1.2.4/portkey-eoa-ironclaw.wasm",
+        "capabilitiesUrl": "https://github.com/Portkey-Wallet/eoa-agent-skills/releases/download/v1.2.4/portkey-eoa-ironclaw.capabilities.json",
+        "installCommand": "ironclaw tool install ./portkey-eoa-ironclaw.wasm",
+        "stateModel": "isolated",
+        "stability": "experimental"
       },
       "openclawToolCount": 21
     },
@@ -382,21 +379,21 @@
       "artifacts": {
         "skillMd": true,
         "mcpServer": true,
-        "openclaw": true
+        "openclaw": true,
+        "ironclawWasm": false
       },
       "setupCommands": {
         "install": "bun install",
         "list": "bun run setup list",
         "openclaw": "bun run setup openclaw",
         "cursor": "bun run setup cursor",
-        "claudeDesktop": "bun run setup claude",
-        "ironclaw": "bun run setup ironclaw"
+        "claudeDesktop": "bun run setup claude"
       },
       "clientSupport": {
         "openclaw": "native",
         "cursor": "native-setup",
         "claude_desktop": "native-setup",
-        "ironclaw": "native-setup",
+        "ironclaw": "unsupported",
         "claude_code": "manual-mcp",
         "codex": "manual-cli-or-mcp"
       },
@@ -407,10 +404,8 @@
           "installCommand": "bunx -p @tomorrowdao/agent-skills tomorrowdao-setup openclaw"
         },
         "ironclaw": {
-          "source": "npm",
-          "mode": "trusted-local-install",
-          "installCommand": "bunx -p @tomorrowdao/agent-skills tomorrowdao-setup ironclaw",
-          "requiresTrustPromotion": true
+          "source": "none",
+          "mode": "unsupported"
         }
       },
       "openclawToolCount": 41

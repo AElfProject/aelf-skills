@@ -33,6 +33,7 @@ export interface SkillClientInstallEntry {
   source: ClientInstallSource;
   mode: ClientInstallMode;
   installCommand?: string;
+  /** Reserved for future trust-promotion flows; current rollout does not consume this field. */
   requiresTrustPromotion?: boolean;
 }
 
@@ -45,6 +46,22 @@ export interface SkillArtifacts {
   skillMd: boolean;
   mcpServer: boolean;
   openclaw: boolean;
+  ironclawWasm: boolean;
+}
+
+export interface SkillIronclawNative {
+  runtime: 'wasm-tool';
+  distribution: 'github-release';
+  artifactUrl: string;
+  capabilitiesUrl: string;
+  installCommand: string;
+  stateModel: 'isolated';
+  stability: 'experimental' | 'stable';
+}
+
+export interface SkillClawhub {
+  slug: string;
+  role: 'discovery-shell' | 'runtime-skill';
 }
 
 export interface SkillClientSupport {
@@ -78,13 +95,15 @@ export interface SkillCatalogEntry {
   setupCommands: SkillSetupCommands;
   clientSupport: SkillClientSupport;
   clientInstall: SkillClientInstall;
+  ironclawNative?: SkillIronclawNative;
+  clawhub?: SkillClawhub;
   openclawToolCount: number;
   dependsOn?: string[];
   sourcePath?: string;
 }
 
 export interface SkillsCatalog {
-  schemaVersion: '1.3.0';
+  schemaVersion: '1.4.0';
   generatedAt: string;
   source: string;
   skills: SkillCatalogEntry[];

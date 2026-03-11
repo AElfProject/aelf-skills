@@ -35,7 +35,7 @@ activation:
 
 ## Distribution / Activation
 - GitHub repo/tree URL 仅用于 discovery。
-- IronClaw 推荐 npm 激活命令：`bunx -p <package-name> <setup-bin> ironclaw`
+- IronClaw 推荐通过 `ironclawNative` 暴露的 native-wasm artifact 激活
 - OpenClaw 在没有 managed install 时，推荐 npm 激活命令：`bunx -p <package-name> <setup-bin> openclaw`
 
 ## Limits / Non-goals
