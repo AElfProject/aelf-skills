@@ -55,14 +55,15 @@ AI 输出 `MUST NOT` 停留在高层建议而不落地到文件和命令。
 - `MUST` 提供 MCP 支持：`src/mcp/server.ts` 或 `scripts.mcp`。
 - 声明 OpenClaw native 时，`MUST` 存在 `openclaw.json` 且满足 `docs/schemas/openclaw.schema.json`。
 - 声明 native setup 时，`MUST` 存在 `scripts.setup` 或 `bin/setup.ts|bin/setup.js`。
-- 若声明 IronClaw native setup，setup 入口必须支持 `bun run setup ironclaw`（或等价 `bin/setup.ts ironclaw`）。
+- 若声明 IronClaw native 交付，仓库还应提供 `ironclaw-wasm/` sidecar，以及通过 `ironclawNative` 暴露的 GitHub Release artifact 元数据。
 - GitHub repo/tree URL 仅用于 discovery；OpenClaw/IronClaw 的最终 activation `MUST` 通过 catalog 元数据表达。
 
 3. 生成产物
-- `MUST` 输出 schemaVersion `1.3.0` 的 catalog。
+- `MUST` 输出 schemaVersion `1.4.0` 的 catalog。
 - `MUST` 满足 `docs/schemas/skills-catalog.schema.json`。
 - 若 workspace 声明 `dependsOn`，catalog `MUST` 同步输出。
 - 对外发布/可安装 skill，`MUST` 额外输出 `distributionSources` 与 `clientInstall`。
+- 若存在 IronClaw native 交付，`MUST` 额外输出 `artifacts.ironclawWasm` 与 `ironclawNative`。
 
 4. 文档同步
 - 若规则/契约/模板发生变更，AI `MUST` 同步更新中英文文档。
@@ -112,7 +113,7 @@ bun run security:audit
 | 输出模式 | 原因 | 修复 |
 |---|---|---|
 | `[WARN] ... SKILL.md not found, project skipped` | skill 缺少 markdown | 补齐 `SKILL.md` 与 front matter |
-| `declared native-setup but setup command not available` | 缺 setup 入口 | 增加 `scripts.setup` 或 `bin/setup.ts/js` |
+| `ironclaw support must be native or unsupported in wasm-only rollout` | IronClaw 支持级别非法 | 仅输出 `clientSupport.ironclaw = native|unsupported` |
 | `declared openclaw native but openclaw.json missing` | 缺 OpenClaw 配置 | 补齐 `openclaw.json` |
 | `[FAIL] Duplicate skill id detected:` | skill id 冲突 | 修正 front matter `name`/workspace 映射 |
 | `[FAIL] <id>: dependsOn references unknown skill id` | 依赖 id 无效 | 修正 `dependsOn` |
@@ -122,7 +123,7 @@ bun run security:audit
 ## 10. 完成定义（Definition of Done）
 
 满足以下条件才算完成：
-1. 新 skill 出现在 `skills-catalog.json`（schema `1.3.0`）。
+1. 新 skill 出现在 `skills-catalog.json`（schema `1.4.0`）。
 2. `health:check` 无 fail。
 3. `readme:check` 通过。
 4. `security:audit` 通过。

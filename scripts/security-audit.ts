@@ -20,6 +20,8 @@ const RISK_PATTERNS: Array<{ name: string; regex: RegExp }> = [
   { name: 'command substitution using $(...)', regex: /\$\([^\n)]*\)/ },
   { name: 'command substitution using backticks', regex: /`[^`]+`/ },
   { name: 'multi-command chain with semicolon', regex: /;\s*\S+/ },
+  { name: 'multi-command chain with &&', regex: /&&\s*\S+/ },
+  { name: 'eval execution', regex: /\beval\b/i },
 ];
 
 function parseArgs(): CliOptions {
@@ -37,7 +39,7 @@ function parseArgs(): CliOptions {
   return { catalogPath };
 }
 
-function collectIssues(catalog: SkillsCatalog): SecurityIssue[] {
+export function collectIssues(catalog: SkillsCatalog): SecurityIssue[] {
   const issues: SecurityIssue[] = [];
 
   for (const skill of catalog.skills) {
@@ -67,6 +69,20 @@ function collectIssues(catalog: SkillsCatalog): SecurityIssue[] {
             skillId: skill.id,
             field: `clientInstall.${field}.installCommand`,
             command,
+            rule: pattern.name,
+          });
+          break;
+        }
+      }
+    }
+
+    if (skill.ironclawNative?.installCommand) {
+      for (const pattern of RISK_PATTERNS) {
+        if (pattern.regex.test(skill.ironclawNative.installCommand)) {
+          issues.push({
+            skillId: skill.id,
+            field: 'ironclawNative.installCommand',
+            command: skill.ironclawNative.installCommand,
             rule: pattern.name,
           });
           break;
@@ -105,4 +121,6 @@ function main(): void {
   }
 }
 
-main();
+if (import.meta.main) {
+  main();
+}

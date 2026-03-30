@@ -19,7 +19,7 @@ Follow `docs/AI_SKILL_CONTRACT.md` strictly.
 - Capability boundary:
   - MCP: <YES/NO>
   - OpenClaw native: <YES/NO>
-  - IronClaw native setup: <YES/NO>
+  - IronClaw native wasm sidecar: <YES/NO>
   - CLI: <YES/NO>
 - Install-level validation allowed: <YES/NO>
 
@@ -32,7 +32,8 @@ Follow `docs/AI_SKILL_CONTRACT.md` strictly.
   - `SKILL.md` front matter name/description (and `version` + `activation.*` for IronClaw when applicable)
   - MCP support (`src/mcp/server.ts` or `scripts.mcp`)
   - `openclaw.json` if OpenClaw native is declared
-  - setup support (`scripts.setup` or `bin/setup.ts|bin/setup.js`), including `setup ironclaw` when IronClaw native setup is declared
+  - setup support (`scripts.setup` or `bin/setup.ts|bin/setup.js`) for local installers where applicable
+  - native IronClaw sidecar support (`ironclaw-wasm/`) when native-wasm delivery is declared
   - README / SKILL distribution wording: GitHub discovery only, activation via npm/ClawHub contract
 - Regenerate catalog and README snapshots.
 

@@ -8,7 +8,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "1.3.0"
+      "const": "1.4.0"
     },
     "generatedAt": {
       "type": "string",
@@ -70,11 +70,12 @@
           },
           "artifacts": {
             "type": "object",
-            "required": ["skillMd", "mcpServer", "openclaw"],
+            "required": ["skillMd", "mcpServer", "openclaw", "ironclawWasm"],
             "properties": {
               "skillMd": { "type": "boolean" },
               "mcpServer": { "type": "boolean" },
-              "openclaw": { "type": "boolean" }
+              "openclaw": { "type": "boolean" },
+              "ironclawWasm": { "type": "boolean" }
             }
           },
           "setupCommands": {
@@ -107,6 +108,7 @@
               },
               "ironclaw": {
                 "type": "string",
+                "description": "Schema remains backward compatible, but the current wasm-only IronClaw rollout only permits native or unsupported at runtime.",
                 "enum": ["native", "native-setup", "manual-mcp", "manual-cli-or-mcp", "manual", "unsupported"]
               },
               "claude_code": {
@@ -136,7 +138,10 @@
                     "enum": ["managed-install", "package-setup", "trusted-local-install", "unsupported"]
                   },
                   "installCommand": { "type": "string" },
-                  "requiresTrustPromotion": { "type": "boolean" }
+                  "requiresTrustPromotion": {
+                    "type": "boolean",
+                    "description": "Reserved for future trust-promotion flows; not consumed in the current rollout."
+                  }
                 }
               },
               "ironclaw": {
@@ -152,8 +157,55 @@
                     "enum": ["managed-install", "package-setup", "trusted-local-install", "unsupported"]
                   },
                   "installCommand": { "type": "string" },
-                  "requiresTrustPromotion": { "type": "boolean" }
+                  "requiresTrustPromotion": {
+                    "type": "boolean",
+                    "description": "Reserved for future trust-promotion flows; not consumed in the current rollout."
+                  }
                 }
+              }
+            }
+          },
+          "ironclawNative": {
+            "type": "object",
+            "required": [
+              "runtime",
+              "distribution",
+              "artifactUrl",
+              "capabilitiesUrl",
+              "installCommand",
+              "stateModel",
+              "stability"
+            ],
+            "properties": {
+              "runtime": {
+                "type": "string",
+                "enum": ["wasm-tool"]
+              },
+              "distribution": {
+                "type": "string",
+                "enum": ["github-release"]
+              },
+              "artifactUrl": { "type": "string", "format": "uri" },
+              "capabilitiesUrl": { "type": "string", "format": "uri" },
+              "installCommand": { "type": "string", "minLength": 1 },
+              "stateModel": {
+                "type": "string",
+                "enum": ["isolated"]
+              },
+              "stability": {
+                "type": "string",
+                "enum": ["experimental", "stable"]
+              }
+            }
+          },
+          "clawhub": {
+            "type": "object",
+            "required": ["slug", "role"],
+            "properties": {
+              "slug": { "type": "string", "minLength": 1 },
+              "role": {
+                "type": "string",
+                "enum": ["discovery-shell", "runtime-skill"]
               }
             }
           },

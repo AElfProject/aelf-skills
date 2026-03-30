@@ -1,6 +1,6 @@
 [中文](CATALOG_SCHEMA.zh-CN.md) | English
 
-# Catalog Schema Semantics (v1.3.0)
+# Catalog Schema Semantics (v1.4.0)
 
 This document defines field semantics of `skills-catalog.json` for both AI and humans.
 
@@ -8,7 +8,7 @@ This document defines field semantics of `skills-catalog.json` for both AI and h
 
 ```json
 {
-  "schemaVersion": "1.3.0",
+  "schemaVersion": "1.4.0",
   "generatedAt": "ISO-8601",
   "source": "workspace.json",
   "skills": [],
@@ -17,7 +17,7 @@ This document defines field semantics of `skills-catalog.json` for both AI and h
 ```
 
 Field meanings:
-1. `schemaVersion`: schema version, currently `1.3.0`.
+1. `schemaVersion`: schema version, currently `1.4.0`.
 2. `generatedAt`: generation timestamp (UTC ISO string).
 3. `source`: source file name used to build the catalog.
 4. `skills`: skill entries.
@@ -34,13 +34,15 @@ Each `skills[]` item includes:
 6. `description`: high-level summary for routing.
 7. `description_zh`: optional Chinese description, preferred by Chinese rendering and fallback to `description` when missing.
 8. `capabilities`: short capability sentences for intent matching.
-9. `artifacts`: boolean availability flags of required artifacts.
+9. `artifacts`: boolean availability flags of required artifacts, including `ironclawWasm`.
 10. `setupCommands`: compatibility display commands for humans/local repos.
 11. `clientSupport`: support level matrix by client type, including `ironclaw`.
-12. `clientInstall`: machine-executable activation contract for `openclaw` and `ironclaw`.
-13. `openclawToolCount`: number of OpenClaw tools.
-14. `dependsOn`: optional direct dependency skill id list for composition/order-aware execution.
-15. `sourcePath`: local-only optional field, omitted in public catalog by default.
+12. `clientInstall`: machine-executable activation contract for `openclaw`, plus a reserved compatibility slot for `ironclaw`.
+13. `ironclawNative`: optional native IronClaw WASM artifact contract.
+14. `clawhub`: optional ClawHub metadata describing discovery-shell vs runtime role.
+15. `openclawToolCount`: number of OpenClaw tools.
+16. `dependsOn`: optional direct dependency skill id list for composition/order-aware execution.
+17. `sourcePath`: local-only optional field, omitted in public catalog by default.
 
 ## 3. `artifacts` semantics
 
@@ -52,6 +54,9 @@ Each `skills[]` item includes:
 
 3. `openclaw: true`
 - Means `openclaw.json` is present for OpenClaw tool descriptions.
+
+4. `ironclawWasm: true`
+- Means the repo ships an `ironclaw-wasm/` sidecar that can produce a native IronClaw WASM artifact.
 
 ## 4. `distributionSources` and `clientInstall`
 
@@ -66,8 +71,16 @@ Each `skills[]` item includes:
 - `package-setup`: host should execute `installCommand`, typically `bunx -p <pkg> <setup-bin> openclaw`.
 
 3. `clientInstall.ironclaw`
-- `trusted-local-install`: host should execute `installCommand`, typically `bunx -p <pkg> <setup-bin> ironclaw`.
-- `requiresTrustPromotion: true` means the host must surface a trust prompt because trusted local files and MCP config will be written.
+- Reserved compatibility field in the current wasm-only rollout.
+- Hosts must treat `mode: unsupported` as the only executable-safe value today.
+- Final IronClaw activation must come from `ironclawNative`, not `clientInstall.ironclaw`.
+- `requiresTrustPromotion` is reserved for future rollout work and is not consumed today.
+
+4. `ironclawNative`
+- Native IronClaw runtime contract for WASM tools.
+- `artifactUrl` / `capabilitiesUrl` point at GitHub Release assets.
+- `installCommand` is intentionally local-path based (for example `ironclaw tool install ./tool.wasm`); the host should download the assets first, then execute locally.
+- `stateModel: isolated` means the native tool keeps its own IronClaw workspace state and does not share the Bun/MCP runtime store.
 
 ## 5. `clientSupport` enum semantics
 
@@ -109,8 +122,9 @@ Recommended style:
 - Output: `skills-catalog.local.json`
 - Characteristic: includes `sourcePath`, intended for local machine only.
 
-3. Additive note (1.3.0)
-- Added `setupCommands.ironclaw` for trusted-skill setup guidance.
-- Added `clientSupport.ironclaw` to the client support matrix.
-- Added `distributionSources` and `clientInstall` to distinguish discovery from activation.
+3. Additive note (1.4.0)
+- Added `artifacts.ironclawWasm` to signal native IronClaw sidecars.
+- Added `ironclawNative` for native WASM artifact discovery and install contracts.
+- Added `clawhub` role metadata to distinguish discovery-shell vs runtime delivery.
+- `clientInstall.ironclaw` remains in schema for backward compatibility, but the current rollout keeps it `unsupported`.
 - Existing consumers should ignore unknown fields if not needed.

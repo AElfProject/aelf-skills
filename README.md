@@ -20,7 +20,7 @@ Read first: skills-catalog.json, docs/SKILL_ROUTING_MATRIX.md, docs/AI_E2E_SCENA
 Then run:
 1) ./bootstrap.sh --source github --dest ./downloaded-skills
 2) bun run health:check -- --skills-root ./downloaded-skills
-3) read `clientInstall.openclaw` / `clientInstall.ironclaw` from `skills-catalog.json`; if `installCommand` exists, execute it locally instead of treating a GitHub tree URL as the final install input
+3) read `ironclawNative`, `clientInstall.openclaw`, and `clientInstall.ironclaw` from `skills-catalog.json`; for IronClaw, execute only `ironclawNative` and treat `clientInstall.ironclaw` as reserved metadata instead of a runnable fallback
 Routing rule: follow SKILL_ROUTING_MATRIX; if ambiguous, output Recommended/Alternative/Reason.
 Failure rule: use Common Recovery Template in docs/AI_E2E_SCENARIOS.md.
 ```
@@ -41,8 +41,9 @@ Treat skill distribution in two stages:
 
 Rules:
 1. GitHub tree/repo URLs are discovery sources only. Do not treat them as the final IronClaw install artifact.
-2. For IronClaw, prefer `clientInstall.ironclaw.installCommand` and expect a trusted local install step.
+2. For IronClaw, use `ironclawNative` only. `clientInstall.ironclaw` is retained as a reserved compatibility field and must not be treated as an executable fallback.
 3. For OpenClaw, prefer `ClawHub` / managed install when `distributionSources.clawhubId` exists; otherwise use `clientInstall.openclaw.installCommand`.
+4. ClawHub may act as a discovery shell for IronClaw-native WASM installs; do not confuse that with the final write-capable runtime.
 
 ## Prerequisites
 
@@ -131,11 +132,13 @@ Main fields per skill:
 3. `repository.https`
 4. `distributionSources` (`githubRepo`, `npmPackage`, optional `clawhubId`)
 5. `description`, `capabilities`
-6. `artifacts` (`skillMd`, `mcpServer`, `openclaw`)
-7. `setupCommands` (compatibility display commands such as `claudeDesktop`, `cursor`, `openclaw`, `ironclaw`)
+6. `artifacts` (`skillMd`, `mcpServer`, `openclaw`, `ironclawWasm`)
+7. `setupCommands` (compatibility display commands such as `claudeDesktop`, `cursor`, `openclaw`)
 8. `clientSupport` (support matrix such as `claude_desktop`, `cursor`, `ironclaw`, `codex`)
-9. `clientInstall` (machine-executable activation contract for `openclaw` / `ironclaw`)
-10. `dependsOn` (optional, schema `1.3.0`)
+9. `clientInstall` (`openclaw` machine activation contract plus reserved `ironclaw` compatibility field)
+10. `ironclawNative` (native WASM artifact contract for IronClaw)
+11. `clawhub` (optional discovery-shell/runtime role metadata)
+12. `dependsOn` (optional, schema `1.4.0`)
 
 Schema references:
 1. `docs/schemas/workspace.schema.json`
@@ -144,7 +147,7 @@ Schema references:
 4. `docs/schemas/skills-catalog.schema.json`
 
 Schema evolution policy:
-1. `patch` (`1.3.x`): wording/docs fixes, no field semantics change.
+1. `patch` (`1.4.x`): wording/docs fixes, no field semantics change.
 2. `minor` (`1.x.0`): backward-compatible field additions.
 3. `major` (`x.0.0`): breaking changes only.
 
@@ -166,9 +169,9 @@ This section is auto-synced by `bun run catalog:generate`.
 | aelfscan-skill | @aelfscan/agent-skills | 0.2.2 | 61 | AelfScan explorer data retrieval and analytics skill for agents. |
 | awaken-agent-skills | @awaken-finance/agent-kit | 1.2.4 | 11 | Awaken DEX trading and market data operations for agents. |
 | eforest-agent-skills | @eforest-finance/agent-skills | 0.4.3 | 48 | eForest symbol and forest NFT operations for agent workflows. |
-| portkey-ca-agent-skills | @portkey/ca-agent-skills | 2.0.0 | 28 | Portkey CA wallet registration/auth/guardian/transfer operations for agents. |
-| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.4 | 21 | Portkey EOA wallet and asset operations for aelf agents. |
-| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.4 | 41 | TomorrowDAO governance, BP, and resource operations for agents. |
+| portkey-ca-agent-skills | @portkey/ca-agent-skills | 2.3.0 | 32 | Portkey CA wallet registration/auth/guardian/transfer operations for agents. |
+| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.6 | 21 | Portkey EOA wallet and asset operations for aelf agents. |
+| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.2.0 | 44 | TomorrowDAO governance, BP, and resource operations for agents. |
 <!-- SKILL_TABLE_END -->
 
 ## Health Check

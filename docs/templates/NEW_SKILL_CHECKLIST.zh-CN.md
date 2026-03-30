@@ -18,7 +18,7 @@
 - [ ] MCP 支持存在：`src/mcp/server.ts` 或 `scripts.mcp`。
 - [ ] 若声明 OpenClaw native，`openclaw.json` 存在。
 - [ ] 若声明 native-setup，存在 `scripts.setup` 或 `bin/setup.ts|bin/setup.js`。
-- [ ] 若声明 IronClaw native setup，必须支持 `setup ironclaw` 且安装到 trusted skill 路径。
+- [ ] 若声明 IronClaw native 交付，必须提供 `ironclaw-wasm/` 与 GitHub Release artifact 元数据。
 
 ## 3. Schema 一致性
 
@@ -27,6 +27,7 @@
 - [ ] `openclaw.json`（若存在）满足 `docs/schemas/openclaw.schema.json`。
 - [ ] 生成后的 `skills-catalog.json` 满足 `docs/schemas/skills-catalog.schema.json`。
 - [ ] 生成后的 catalog 包含 `distributionSources` 与 `clientInstall`。
+- [ ] 若存在 native IronClaw 交付，生成后的 catalog 还包含 `artifacts.ironclawWasm` 与 `ironclawNative`。
 
 ## 4. 架构与产品要求
 

@@ -18,7 +18,7 @@ Copy and check this list in your PR.
 - [ ] MCP support exists: `src/mcp/server.ts` or `scripts.mcp`.
 - [ ] If OpenClaw native is declared, `openclaw.json` exists.
 - [ ] If native-setup is declared, `scripts.setup` or `bin/setup.ts|bin/setup.js` exists.
-- [ ] If IronClaw native setup is declared, `setup ironclaw` is supported and installs a trusted skill path.
+- [ ] If IronClaw native delivery is declared, `ironclaw-wasm/` and GitHub Release artifact metadata are present.
 
 ## 3. Schema Alignment
 
@@ -27,6 +27,7 @@ Copy and check this list in your PR.
 - [ ] `openclaw.json` (if present) matches `docs/schemas/openclaw.schema.json`.
 - [ ] Generated `skills-catalog.json` matches `docs/schemas/skills-catalog.schema.json`.
 - [ ] Generated catalog includes `distributionSources` and `clientInstall`.
+- [ ] Generated catalog includes `artifacts.ironclawWasm` / `ironclawNative` when native IronClaw delivery exists.
 
 ## 4. Architecture and Product Requirements
 

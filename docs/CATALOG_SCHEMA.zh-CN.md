@@ -1,6 +1,6 @@
 中文 | [English](CATALOG_SCHEMA.md)
 
-# Catalog Schema 语义说明（v1.3.0）
+# Catalog Schema 语义说明（v1.4.0）
 
 本文档定义 `skills-catalog.json` 的字段语义，供 AI 与开发者统一理解。
 
@@ -8,7 +8,7 @@
 
 ```json
 {
-  "schemaVersion": "1.3.0",
+  "schemaVersion": "1.4.0",
   "generatedAt": "ISO-8601",
   "source": "workspace.json",
   "skills": [],
@@ -17,7 +17,7 @@
 ```
 
 字段说明：
-1. `schemaVersion`：schema 版本。当前为 `1.3.0`。
+1. `schemaVersion`：schema 版本。当前为 `1.4.0`。
 2. `generatedAt`：生成时间（UTC ISO 字符串）。
 3. `source`：catalog 的输入来源文件名。
 4. `skills`：技能数组。
@@ -34,13 +34,15 @@
 6. `description`：技能简介（用于高层路由）。
 7. `description_zh`：可选中文描述。中文界面优先使用，缺失时回退 `description`。
 8. `capabilities`：能力短句列表（用于 intent 匹配）。
-9. `artifacts`：能力产物存在性布尔值。
+9. `artifacts`：能力产物存在性布尔值，包含 `ironclawWasm`。
 10. `setupCommands`：面向人类/本地仓的兼容展示命令。
 11. `clientSupport`：客户端支持级别矩阵，包含 `ironclaw`。
-12. `clientInstall`：`openclaw` 与 `ironclaw` 的机器可执行 activation 契约。
-13. `openclawToolCount`：OpenClaw 工具数量。
-14. `dependsOn`：可选直接依赖 skill id 列表，用于编排顺序与组合执行。
-15. `sourcePath`：仅本地模式可选字段，公开 catalog 默认不含。
+12. `clientInstall`：`openclaw` 的机器 activation 契约，以及保留的 `ironclaw` 兼容字段。
+13. `ironclawNative`：可选的 IronClaw native WASM artifact 契约。
+14. `clawhub`：可选的 ClawHub 元数据，用于区分 discovery-shell 与 runtime 角色。
+15. `openclawToolCount`：OpenClaw 工具数量。
+16. `dependsOn`：可选直接依赖 skill id 列表，用于编排顺序与组合执行。
+17. `sourcePath`：仅本地模式可选字段，公开 catalog 默认不含。
 
 ## 3. artifacts 语义
 
@@ -52,6 +54,9 @@
 
 3. `openclaw: true`
 - 意味着存在 `openclaw.json` 可用于 OpenClaw 工具描述。
+
+4. `ironclawWasm: true`
+- 表示仓库带有 `ironclaw-wasm/` sidecar，可产出 IronClaw native WASM artifact。
 
 ## 4. `distributionSources` 与 `clientInstall`
 
@@ -66,8 +71,16 @@
 - `package-setup`：宿主应执行 `installCommand`，通常是 `bunx -p <pkg> <setup-bin> openclaw`。
 
 3. `clientInstall.ironclaw`
-- `trusted-local-install`：宿主应执行 `installCommand`，通常是 `bunx -p <pkg> <setup-bin> ironclaw`。
-- `requiresTrustPromotion: true` 表示宿主必须给出 trust 提示，因为会写入 trusted 本地 skill 与 MCP 配置。
+- 当前 wasm-only rollout 中，这个字段只作为兼容保留位。
+- 现阶段宿主只能把 `mode: unsupported` 当成安全可执行值。
+- IronClaw 的最终 activation 必须来自 `ironclawNative`，而不是 `clientInstall.ironclaw`。
+- `requiresTrustPromotion` 目前只是未来保留字段，当前 rollout 不消费。
+
+4. `ironclawNative`
+- IronClaw 原生 WASM runtime 契约。
+- `artifactUrl` / `capabilitiesUrl` 指向 GitHub Release assets。
+- `installCommand` 故意只表达本地路径安装（例如 `ironclaw tool install ./tool.wasm`）；宿主需要先下载 artifact 再执行。
+- `stateModel: isolated` 表示 native tool 维护独立 IronClaw workspace 状态，不与 Bun/MCP runtime 共用。
 
 ## 5. clientSupport 枚举语义
 
@@ -109,8 +122,9 @@
 - 输出：`skills-catalog.local.json`
 - 特点：包含 `sourcePath`，仅适用于本机环境。
 
-3. 增量说明（1.3.0）
-- 新增 `setupCommands.ironclaw`，用于表达 trusted skill setup 命令。
-- 新增 `clientSupport.ironclaw`，用于表达 IronClaw 支持级别。
-- 新增 `distributionSources` 与 `clientInstall`，用于区分 discovery 与 activation。
+3. 增量说明（1.4.0）
+- 新增 `artifacts.ironclawWasm`，用于表达 IronClaw native sidecar。
+- 新增 `ironclawNative`，用于表达 native WASM artifact 发现与安装契约。
+- 新增 `clawhub` role 元数据，用于区分 discovery-shell 与 runtime 交付。
+- `clientInstall.ironclaw` 继续保留以兼容旧消费者，但当前 rollout 固定为 `unsupported`。
 - 旧消费者如暂不使用新增字段，需按“忽略未知字段”兼容读取。

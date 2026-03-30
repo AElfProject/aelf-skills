@@ -35,7 +35,7 @@ activation:
 
 ## Distribution / Activation
 - GitHub repo/tree URLs are discovery-only for AI hosts.
-- Preferred IronClaw activation command from npm: `bunx -p <package-name> <setup-bin> ironclaw`
+- Preferred IronClaw activation is the native-wasm artifact exposed via `ironclawNative`
 - Preferred OpenClaw activation command from npm when managed install is unavailable: `bunx -p <package-name> <setup-bin> openclaw`
 
 ## Limits / Non-goals

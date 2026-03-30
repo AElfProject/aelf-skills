@@ -24,7 +24,17 @@
   "id": "example-skill",
   "displayName": "Example Skill",
   "dependsOn": ["aelf-node-skill"],
-  "npm": { "name": "@example/skill", "version": "0.1.0" }
+  "npm": { "name": "@example/skill", "version": "0.1.0" },
+  "artifacts": { "ironclawWasm": true },
+  "ironclawNative": {
+    "runtime": "wasm-tool",
+    "distribution": "github-release",
+    "artifactUrl": "https://github.com/example/skill/releases/download/v0.1.0/example-skill.wasm",
+    "capabilitiesUrl": "https://github.com/example/skill/releases/download/v0.1.0/example-skill.capabilities.json",
+    "installCommand": "ironclaw tool install ./example-skill.wasm",
+    "stateModel": "isolated",
+    "stability": "experimental"
+  }
 }
 ```
 
@@ -33,7 +43,7 @@
 ```text
 $ bun run catalog:generate
 [DONE] Generated catalog: .../skills-catalog.json
-[INFO] Schema: 1.3.0
+[INFO] Schema: 1.4.0
 
 $ bun run health:check
 [Health Check] Summary: total=8, pass=8, warn=0, fail=0
