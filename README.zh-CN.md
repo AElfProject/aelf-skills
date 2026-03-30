@@ -166,9 +166,9 @@ Schema 演进规则：
 | aelfscan-skill | @aelfscan/agent-skills | 0.2.2 | 61 | AelfScan 浏览器数据检索与分析技能。 |
 | awaken-agent-skills | @awaken-finance/agent-kit | 1.2.4 | 11 | Awaken DEX 交易与行情数据技能。 |
 | eforest-agent-skills | @eforest-finance/agent-skills | 0.4.3 | 48 | eForest 代币与 NFT 市场操作技能。 |
-| portkey-ca-agent-skills | @portkey/ca-agent-skills | 2.0.0 | 28 | Portkey CA 钱包注册、认证、Guardian 与转账技能。 |
-| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.4 | 21 | Portkey EOA 钱包与资产操作技能。 |
-| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.4 | 41 | TomorrowDAO 治理、BP 与资源操作技能。 |
+| portkey-ca-agent-skills | @portkey/ca-agent-skills | 2.3.0 | 32 | Portkey CA 钱包注册、认证、Guardian 与转账技能。 |
+| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.6 | 21 | Portkey EOA 钱包与资产操作技能。 |
+| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.2.0 | 44 | TomorrowDAO 治理、BP 与资源操作技能。 |
 <!-- SKILL_TABLE_END -->
 
 ## 健康检查

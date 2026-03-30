@@ -166,9 +166,9 @@ This section is auto-synced by `bun run catalog:generate`.
 | aelfscan-skill | @aelfscan/agent-skills | 0.2.2 | 61 | AelfScan explorer data retrieval and analytics skill for agents. |
 | awaken-agent-skills | @awaken-finance/agent-kit | 1.2.4 | 11 | Awaken DEX trading and market data operations for agents. |
 | eforest-agent-skills | @eforest-finance/agent-skills | 0.4.3 | 48 | eForest symbol and forest NFT operations for agent workflows. |
-| portkey-ca-agent-skills | @portkey/ca-agent-skills | 2.0.0 | 28 | Portkey CA wallet registration/auth/guardian/transfer operations for agents. |
-| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.4 | 21 | Portkey EOA wallet and asset operations for aelf agents. |
-| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.1.4 | 41 | TomorrowDAO governance, BP, and resource operations for agents. |
+| portkey-ca-agent-skills | @portkey/ca-agent-skills | 2.3.0 | 32 | Portkey CA wallet registration/auth/guardian/transfer operations for agents. |
+| portkey-eoa-agent-skills | @portkey/eoa-agent-skills | 1.2.6 | 21 | Portkey EOA wallet and asset operations for aelf agents. |
+| tomorrowdao-agent-skills | @tomorrowdao/agent-skills | 0.2.0 | 44 | TomorrowDAO governance, BP, and resource operations for agents. |
 <!-- SKILL_TABLE_END -->
 
 ## Health Check
