@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.4.0",
-  "generatedAt": "2026-03-10T05:07:10.783Z",
+  "generatedAt": "2026-03-30T03:54:25.207Z",
   "source": "workspace.json",
   "skills": [
     {
@@ -235,7 +235,7 @@
       "displayName": "Portkey CA Agent Skill",
       "npm": {
         "name": "@portkey/ca-agent-skills",
-        "version": "2.0.0"
+        "version": "2.3.0"
       },
       "repository": {
         "https": "https://github.com/Portkey-Wallet/ca-agent-skills.git"
@@ -248,7 +248,7 @@
       "description_zh": "Portkey CA 钱包注册、认证、Guardian 与转账技能。",
       "capabilities": [
         "Auth operations: verifier, email code, register, recover, status",
-        "Query operations: account, guardian, assets, chain config",
+        "Query operations: account, guardian, assets, chain config, transfer preflight",
         "Tx operations: transfer, contract call, approvals, keystore workflows",
         "Shared wallet context: auto-set active CA profile for cross-skill signer resolution",
         "Supports SDK, CLI, MCP, OpenClaw, and IronClaw integration from one codebase."
@@ -285,14 +285,14 @@
           "mode": "unsupported"
         }
       },
-      "openclawToolCount": 28
+      "openclawToolCount": 32
     },
     {
       "id": "portkey-eoa-agent-skills",
       "displayName": "Portkey EOA Agent Skill",
       "npm": {
         "name": "@portkey/eoa-agent-skills",
-        "version": "1.2.4"
+        "version": "1.2.6"
       },
       "repository": {
         "https": "https://github.com/Portkey-Wallet/eoa-agent-skills.git"
@@ -345,8 +345,8 @@
       "ironclawNative": {
         "runtime": "wasm-tool",
         "distribution": "github-release",
-        "artifactUrl": "https://github.com/Portkey-Wallet/eoa-agent-skills/releases/download/v1.2.4/portkey-eoa-ironclaw.wasm",
-        "capabilitiesUrl": "https://github.com/Portkey-Wallet/eoa-agent-skills/releases/download/v1.2.4/portkey-eoa-ironclaw.capabilities.json",
+        "artifactUrl": "https://github.com/Portkey-Wallet/eoa-agent-skills/releases/download/v1.2.6/portkey-eoa-ironclaw.wasm",
+        "capabilitiesUrl": "https://github.com/Portkey-Wallet/eoa-agent-skills/releases/download/v1.2.6/portkey-eoa-ironclaw.capabilities.json",
         "installCommand": "ironclaw tool install ./portkey-eoa-ironclaw.wasm",
         "stateModel": "isolated",
         "stability": "experimental"
@@ -358,7 +358,7 @@
       "displayName": "TomorrowDAO Agent Skill",
       "npm": {
         "name": "@tomorrowdao/agent-skills",
-        "version": "0.1.4"
+        "version": "0.2.0"
       },
       "repository": {
         "https": "https://github.com/TomorrowDAOProject/tomorrowDAO-skill.git"
@@ -371,6 +371,8 @@
       "description_zh": "TomorrowDAO 治理、BP 与资源操作技能。",
       "capabilities": [
         "DAO domain: create/update/proposal/discussion operations",
+        "Token read helpers: allowance view, balance view",
+        "DAO read helpers: proposal my-info, DAO token allowance view alias, DAO token balance view alias",
         "Network governance and BP election operation set",
         "Resource token trading with unified ToolResult/TxReceipt outputs",
         "Shared signer resolution for send mode: `explicit -> context -> env`",
@@ -408,11 +410,8 @@
           "mode": "unsupported"
         }
       },
-      "openclawToolCount": 41
+      "openclawToolCount": 44
     }
   ],
-  "warnings": [
-    "[WARN] portkey/agent-skills-e2e: SKILL.md not found, project skipped",
-    "[WARN] vibeCoding/aelf-skill-prompt-pilot: SKILL.md not found, project skipped"
-  ]
+  "warnings": []
 }
